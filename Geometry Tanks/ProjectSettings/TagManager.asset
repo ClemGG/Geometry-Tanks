@@ -5,6 +5,7 @@ TagManager:
   serializedVersion: 2
   tags:
   - Wall
+  - IA
   layers:
   - Default
   - TransparentFX
@@ -18,8 +19,8 @@ TagManager:
   - 
   - 
   - Wall
-  - 
-  - 
+  - Ground
+  - Player
   - 
   - 
   - 

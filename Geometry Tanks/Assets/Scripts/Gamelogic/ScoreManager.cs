@@ -149,6 +149,7 @@ public class ScoreManager : MonoBehaviour
     public void EndGame()
     {
         partieTerminée = true;
+        gameManager.StopAllPlayersMovement();
 
         StartCoroutine(CheckWinner());
     }
@@ -156,8 +157,6 @@ public class ScoreManager : MonoBehaviour
 
     private IEnumerator CheckWinner()
     {
-        gameManager.StopAllPlayersMovement();
-
 
         //On active juste le texte Time's Up! pour indiquer au joueur que la partie est finie
         //Et on désactive le countdown de la partie
@@ -284,35 +283,26 @@ public class ScoreManager : MonoBehaviour
         for (int i = 0; i < 4; i++)
         {
             UpdateExpUI(joueurID, i);
-
-
-
-            //Panel                    //content   //Boutons   //Croix             //logo et décompte
-            Image armeLogo = panelsJoueurs[joueurID - 1].GetChild(1).GetChild(0).GetChild(i).GetChild(2).GetComponent<Image>();
-            Image décompteImg = panelsJoueurs[joueurID - 1].GetChild(1).GetChild(0).GetChild(i).GetChild(3).GetComponent<Image>();
-            TextMeshProUGUI décompte = panelsJoueurs[joueurID - 1].GetChild(1).GetChild(0).GetChild(i).GetChild(4).GetComponent<TextMeshProUGUI>();
-            
-            //On désactive juste le compteur et on active le logo.
-            décompteImg.fillAmount = 0f;
-            décompte.gameObject.SetActive(false);
-            armeLogo.gameObject.SetActive(true);
-        }
-
-
-        //On récupère toutes les armes du joueur et on remet leur timer à 0 pour que le joueur puisse les utiliser à nouveau
-        //Ca forcera aussi l'arrêt de la coroutine qui gère le cooldown
-        Arme[] armesDuJoueur = gameManager.joueurs[joueurID - 1].p.transform.GetComponentsInChildren<Arme>();
-
-        for (int j = 0; j < armesDuJoueur.Length; j++)
-        {
-            armesDuJoueur[j].timer = 0f;
+            ResetWeaponUI(joueurID, i);
         }
 
         UpdateHealthUI(joueurID);
         UpdateKdrUI(joueurID);
     }
 
+    public void ResetWeaponUI(int joueurID, int uiToUpdate)
+    {
 
+        //Panel                    //content   //Boutons   //Croix             //logo et décompte
+        Image armeLogo = panelsJoueurs[joueurID - 1].GetChild(1).GetChild(0).GetChild(uiToUpdate).GetChild(2).GetComponent<Image>();
+        Image décompteImg = panelsJoueurs[joueurID - 1].GetChild(1).GetChild(0).GetChild(uiToUpdate).GetChild(3).GetComponent<Image>();
+        TextMeshProUGUI décompte = panelsJoueurs[joueurID - 1].GetChild(1).GetChild(0).GetChild(uiToUpdate).GetChild(4).GetComponent<TextMeshProUGUI>();
+
+        //On désactive juste le compteur et on active le logo.
+        décompteImg.fillAmount = 0f;
+        décompte.gameObject.SetActive(false);
+        armeLogo.gameObject.SetActive(true);
+    }
 
 
 
@@ -367,27 +357,26 @@ public class ScoreManager : MonoBehaviour
         Image décompteImg = panelsJoueurs[joueurID - 1].GetChild(1).GetChild(0).GetChild(uiToUpdate).GetChild(3).GetComponent<Image>();
         Image armeLogo = panelsJoueurs[joueurID - 1].GetChild(1).GetChild(0).GetChild(uiToUpdate).GetChild(2).GetComponent<Image>();
         TextMeshProUGUI décompte = panelsJoueurs[joueurID - 1].GetChild(1).GetChild(0).GetChild(uiToUpdate).GetChild(4).GetComponent<TextMeshProUGUI>();
-        Arme armeActuelle = gameManager.joueurs[joueurID - 1].p.armeActuelle;
+
+        Arme armeActuelle = gameManager.joueurs[joueurID - 1].p.tousLesMeshsDuJoueur[meshIndex].GetComponent<Arme>();
+        //On ne récupère pas l'arme actuelle du joueur, car c'est un passage par référence et on risque de modifier le cooldown de la mauvaise arme si armeActuelle change
+        //Du coup, on ne la récupère pas via armeActuelle
 
 
         décompte.gameObject.SetActive(true);
         armeLogo.gameObject.SetActive(false);
 
-
-
-        armeActuelle.timer = armeActuelle.cadenceDeTir;
+        
         décompteImg.fillAmount = 1f;
 
-        while (décompteImg.fillAmount > 0f)
+        while (!armeActuelle.peutTirer)
         {
-            armeActuelle.timer -= Time.deltaTime;
             décompteImg.fillAmount = armeActuelle.timer / armeActuelle.cadenceDeTir;
             décompte.text = Mathf.RoundToInt(armeActuelle.timer).ToString();
 
             yield return null;
         }
-
-        armeActuelle.timer = 0f;
+        
         décompteImg.fillAmount = 0f;
 
         décompte.gameObject.SetActive(false);
@@ -407,7 +396,7 @@ public class ScoreManager : MonoBehaviour
                             //Panel                    //content   //barre de vie
         Image barreDeVie = panelsJoueurs[joueurID - 1].GetChild(1).GetChild(2).GetComponent<Image>();
 
-        barreDeVie.fillAmount = gameManager.joueurs[joueurID - 1].curHealth / gameManager.joueurs[joueurID - 1].maxHealth;
+        barreDeVie.fillAmount = (float)gameManager.joueurs[joueurID - 1].curHealth / (float)gameManager.joueurs[joueurID - 1].maxHealth;
         barreDeVie.color = Color.Lerp(lowHealthColor, highHealthColor, barreDeVie.fillAmount);
     }
 

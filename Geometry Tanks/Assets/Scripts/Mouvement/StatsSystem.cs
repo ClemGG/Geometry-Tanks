@@ -9,6 +9,7 @@ public class StatsSystem : MonoBehaviour
     [Header("Scripts & Components : ")]
     [Space(10)]
 
+    public PlayerUI playerUI; //L'UI perso du joueur sur le terrain. Doit être placé tout en bas de la hiérarchie pour ne pas gêner la recherche des armes
     public string[] particleTags; //Les tags des particules qui devront être libérées au moment de la mort du joueur, les grosses comme les petites (donc 8 particules)
     [HideInInspector] public PlayerMovement p;
     Transform t;
@@ -27,7 +28,6 @@ public class StatsSystem : MonoBehaviour
     void Start()
     {
         GetScripts();
-        ScoreManager.instance.InitializePlayerUI(p.joueurID);
     }
 
 
@@ -46,6 +46,11 @@ public class StatsSystem : MonoBehaviour
         t = transform;
 
         curHealth = maxHealth;
+
+        playerUI = t.GetChild(t.childCount - 1).GetComponent<PlayerUI>();
+        playerUI.UpdateHealthUI();
+
+        ScoreManager.instance.InitializePlayerUI(p.joueurID);
     }
 
 
@@ -56,9 +61,15 @@ public class StatsSystem : MonoBehaviour
 
 
     //Mettre 0 par défaut pour les IAs (vu qu'elles n'ont pas d'ID)
-    public void OnHit(int pts, int enemyID)
+    public void OnHit(int pts, int enemyID, Enums.TypeArme typeDeProjectile)
     {
+        //Si le projectile et le vaisseau sont de la même couleur ou si le joueur est touché par son propre projectile, alors on n'applique aucun dégât, et le projectile passe à travers le joueur
+        if (typeDeProjectile == p.typeDuVaisseau || enemyID == p.joueurID)
+            return;
+
         curHealth -= pts;
+
+        playerUI.UpdateHealthUI();
 
         if(curHealth < 0)
         {
@@ -73,18 +84,12 @@ public class StatsSystem : MonoBehaviour
         deaths++;
 
         Camera.main.GetComponent<CameraShake>().Shake();
-
-
-        ScoreManager.instance.UpdateHealthUI(p.joueurID);
-        ScoreManager.instance.UpdateKdrUI(p.joueurID);
+        
+        if(enemyID > 0) //Si l'ID est égal à 0, l'ennemi qui a tué le joueur est une IA, donc on ne change que le UI du joueur mort
+            ScoreManager.instance.UpdateKdrUI(enemyID);
 
         LooseAllExp(); //Videra tout l'exp d joueur et libérera des particules d'exp dans l'arène
-
-        for (int i = 0; i < 3; i++)
-        {
-            ScoreManager.instance.UpdateExpUI(p.joueurID, i);
-        }
-
+        
         StartCoroutine(GameManager.instance.RespawnPlayerOnDeath(p.joueurID));
     }
 
@@ -164,10 +169,15 @@ public class StatsSystem : MonoBehaviour
     private void OnEnable()
     {
         ScoreManager.instance.InitializePlayerUI(p.joueurID);
+        //On remet à jour tous les UIs au moment de la mort et du respawn du joueur
+
         Camera.main.GetComponent<MultipleTargetCam>().targets.Add(transform);
     }
     private void OnDisable()
     {
+        ScoreManager.instance.InitializePlayerUI(p.joueurID);
+        //On remet à jour tous les UIs au moment de la mort et du respawn du joueur
+        
         Camera.main.GetComponent<MultipleTargetCam>().targets.Remove(transform);
     }
 

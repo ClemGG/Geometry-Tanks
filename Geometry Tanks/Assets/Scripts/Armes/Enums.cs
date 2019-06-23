@@ -4,6 +4,5 @@ using UnityEngine;
 
 public class Enums
 {
-    public enum TypeArme {Rouge, Jaune, Vert, Bleu };
-    public TypeArme typeArme;
+    public enum TypeArme {Bleu, Rouge, Jaune, Vert};
 }

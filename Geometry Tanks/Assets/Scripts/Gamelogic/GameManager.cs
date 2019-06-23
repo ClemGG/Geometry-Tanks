@@ -48,9 +48,24 @@ public class GameManager : MonoBehaviour
 
     private Vector3 GetComponentRandomSpawnPoint()
     {
-        return spawnPoints[UnityEngine.Random.Range(0, spawnPoints.Length)].position;
-    }
+        List<Vector3> spawnPositions = new List<Vector3>();
 
+        for (int i = 0; i < spawnPoints.Length; i++)
+        {
+            Collider[] c = Physics.OverlapSphere(spawnPoints[i].position, 5f, LayerMask.NameToLayer("Player"));
+            if (c == null)  //Si on ne détecte aucun joueur dans la zone environnante, ce point de spawn est sûr et on peut y spawner le joueur
+            {
+                spawnPositions.Add(spawnPoints[i].position);
+            }
+        }
+
+        // Vu qu'on a 4 joueurs et 6 points de spawn, ce n'est pas la peine de faire une vérification sur la taille de la liste pour voir si elle est nulle ou pas.
+        // Mais juste pour la propreté du code (si jamais on a moins de pts de spawn), on met la boucle if quand même
+        if (spawnPositions.Count == 0)
+            return spawnPoints[UnityEngine.Random.Range(0, spawnPoints.Length)].position;
+        else
+            return spawnPositions[UnityEngine.Random.Range(0, spawnPositions.Count)];
+    }
 
 
 

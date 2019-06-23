@@ -38,17 +38,19 @@ public class EnemySpawner : MonoBehaviour
     private void OnValidate()
     {
         GetComponent<SphereCollider>().radius = radius*2f;  //On instanciera les IAs dans le radius, et la détection du joueur sera dans le double de ce radius, pour ne pas surprendre le joueur
+        timer = cooldownTimer / 2f;
     }
 
     private void Reset()
     {
         GetComponent<SphereCollider>().radius = radius*2f;
+        timer = cooldownTimer / 2f;
     }
 
 
 #endif
 
-    
+
 
 
 
@@ -91,11 +93,12 @@ public class EnemySpawner : MonoBehaviour
             Vector3 v = t.position + Random.insideUnitSphere * radius;
 
             ennemisSpawnés[i] = ObjectPooler.instance.SpawnFromPool(enemyTagsToSpawn[alea], new Vector3(v.x, 0f, v.z), Quaternion.identity).GetComponent<IAMovement>();
-            
+            ennemisSpawnés[i].spawnPos = t.position;
 
         }
     }
 
+    //On Trigger Enter est appelée quand CET objet entre dans un trigger, peu importe si notre collider est trigger ou non
     private void OnTriggerEnter(Collider c)
     {
         if (c.CompareTag("Player"))

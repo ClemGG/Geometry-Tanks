@@ -16,7 +16,19 @@ public class PlayerMovement : MonoBehaviour
 
     [HideInInspector] public StatsSystem s;
     [HideInInspector] public Transform t, meshToRotate;
-    Rigidbody rb;
+    [HideInInspector] public Rigidbody rb;
+
+
+
+
+    [Space(10)]
+    [Header("Armes : ")]
+    [Space(10)]
+
+    public Enums.TypeArme typeDuVaisseau;
+    [HideInInspector] public Arme armeActuelle;
+    int indexMeshActuel = 0;
+
 
 
 
@@ -37,18 +49,6 @@ public class PlayerMovement : MonoBehaviour
     Vector3 moveInput, rotInput, moveDir;
 
     float xVelocity, zVelocity;
-
-
-
-
-    [Space(10)]
-    [Header("Armes : ")]
-    [Space(10)]
-
-    [HideInInspector] public Enums.TypeArme typeDuVaisseau;
-    [HideInInspector] public Arme armeActuelle;
-    int indexMeshActuel = 0;
-
 
 
 
@@ -122,15 +122,9 @@ public class PlayerMovement : MonoBehaviour
         t = transform;
         rb = GetComponent<Rigidbody>();
         rb.useGravity = false;
+        rb.constraints = RigidbodyConstraints.FreezePositionY | RigidbodyConstraints.FreezeRotation;
 
-        if (tousLesMeshsDuJoueur == null)
-        {
-            Debug.LogError("Erreur : La liste des meshs du joueur est nulle");
-            return;
-        }
-        meshToRotate = tousLesMeshsDuJoueur[0];
-        armeActuelle = meshToRotate.GetComponent<Arme>();
-        typeDuVaisseau = armeActuelle.typeArme;
+        ChangerArmeEtVaisseau(typeDuVaisseau);
     }
 
 
@@ -156,6 +150,13 @@ public class PlayerMovement : MonoBehaviour
 
     private void ChangerArmeEtVaisseau(Enums.TypeArme nouveauTypeArme)
     {
+
+        if (tousLesMeshsDuJoueur == null)
+        {
+            Debug.LogError("Erreur : La liste des meshs du joueur est nulle");
+            return;
+        }
+
 
         switch (nouveauTypeArme)
         {
@@ -197,8 +198,6 @@ public class PlayerMovement : MonoBehaviour
             }
             /* Au lieu de désactiver les meshs et leurs armes avec, on ne désactive que les meshRenderers et on garde les armes activées.
              * Comme ça elles pourront continuer de calculer leur cooldown seules sans crainte d'interruption, et elles ne seront pas appelées puisqu'on change d'arme en même temps que de mesh.
-             * 
-             * A TESTER : Puisqu'on calcule les cooldowns des armes dans le ScoreManager, je pense qu'on peut se permettre de désactiver les meshes inutilisés.
              */
 
         }
@@ -225,10 +224,12 @@ public class PlayerMovement : MonoBehaviour
 
     private void Tirer()
     {
-        if(Mathf.Approximately(armeActuelle.timer, 0f))
+        if(armeActuelle.peutTirer)
         {
             armeActuelle.Tirer();
+
             StartCoroutine(ScoreManager.instance.UpdateCooldownUI(joueurID, indexMeshActuel));
+            //On va le garder en tant que coroutine, comme ça la fonction n'aura pas à chercher les UIs à chaque frame
         }
     }
 
