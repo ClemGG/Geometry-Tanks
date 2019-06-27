@@ -28,6 +28,9 @@ public class Projectile : MonoBehaviour
     public bool isEvolved;  //Nous permettra de partager le code entre les projectiles normaux et leurs évolutions
     public Enums.TypeArme typeDeProjectile;
     public string[] collisionTags;   //Le type d'ennemi qu'il peut toucher (joueur ou IA, ou les deux)
+
+    [Space(10)]
+
     public int dégâts;
 
     [Space(10)]
@@ -60,7 +63,7 @@ public class Projectile : MonoBehaviour
 
 
 
-    protected void OnEnable()
+    protected virtual void OnEnable()
     {
         moveTimer = 0f;
         duréeTimer = 0f;
@@ -75,10 +78,11 @@ public class Projectile : MonoBehaviour
     }
 
 
-    private void GetScripts()
+    protected void GetScripts()
     {
         t = transform;
         rb = GetComponent<Rigidbody>();
+        sc = GetComponent<SphereCollider>();
 
         sc.isTrigger = true;
         rb.constraints = RigidbodyConstraints.FreezePositionY | RigidbodyConstraints.FreezeRotation;
@@ -116,7 +120,7 @@ public class Projectile : MonoBehaviour
 
 
 
-    protected void Move()
+    protected virtual void Move()
     {
         moveTimer += Time.deltaTime;
         rb.MovePosition(t.position + t.forward * moveCurve.Evaluate(moveTimer) * moveSpeed /* * Time.deltaTime*/);
@@ -130,21 +134,57 @@ public class Projectile : MonoBehaviour
 
     protected virtual void OnTriggerEnter(Collider c)
     {
+
+
+        if (c.CompareTag("Wall"))
+        {
+            SpawnPrefabsOnDeath();
+            gameObject.SetActive(false);
+            return;
+        }
+
         for (int i = 0; i < collisionTags.Length; i++)
         {
             if (c.CompareTag(collisionTags[i]))
             {
                 if (c.CompareTag("Player"))
                 {
-                    c.GetComponent<StatsSystem>().OnHit(dégâts, projectileID, typeDeProjectile);
+                    StatsSystem s = c.transform.transform.parent.GetComponent<StatsSystem>();
+
+                    if (s)
+                    {
+                        if (s.p.joueurID != projectileID)
+                        {
+                            s.OnHit(dégâts, projectileID, typeDeProjectile); //Puisqu'on met le trigger sur chacun des meshs, on va chercher le "Player" donc le parent
+
+                            if (s.p.typeDuVaisseau != typeDeProjectile)
+                            {
+                                SpawnPrefabsOnDeath();
+                                gameObject.SetActive(false);
+                            }
+                        }
+                    }
                 }
                 else if(c.CompareTag("IA"))
                 {
-                    c.GetComponent<IAStats>().OnHit(dégâts, typeDeProjectile);
+                    IAStats s = c.GetComponent<IAStats>();
+
+                    if (s)
+                    {
+                        if (projectileID != 0)
+                        {
+                            s.OnHit(dégâts, typeDeProjectile); //Puisqu'on met le trigger sur chacun des meshs, on va chercher le "Player" donc le parent
+
+
+                            if (s.m.typeDeCetteIA != typeDeProjectile)
+                            {
+                                SpawnPrefabsOnDeath();
+                                gameObject.SetActive(false);
+                            }
+                        }
+                    }
                 }
 
-                SpawnPrefabsOnDeath();
-                gameObject.SetActive(false);
             }
         }
     }

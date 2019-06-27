@@ -67,8 +67,8 @@ public class ScoreManager : MonoBehaviour
 
         for (int i = 0; i < panelsJoueurs.Length; i++)
         {
-            panelsJoueurs[i].GetChild(1).gameObject.SetActive(i <= gameManager.joueurs.Count);
-            scoreFinauxJoueurs[i].gameObject.SetActive(i <= gameManager.joueurs.Count);
+            panelsJoueurs[i].GetChild(1).gameObject.SetActive(i < gameManager.joueurs.Count);
+            scoreFinauxJoueurs[i].gameObject.SetActive(i < gameManager.joueurs.Count);
         }
 
         countdownTimer = countdown;
@@ -318,22 +318,18 @@ public class ScoreManager : MonoBehaviour
     public void UpdateExpUI(int joueurID, int particleIndex)    
     {
 
-       
-            //Panel                    //content   //Boutons
-            for (int i = 0; i < panelsJoueurs[joueurID - 1].GetChild(1).GetChild(0).childCount; i++)
-            {
-                //Panel                    //content   //Boutons   //Croix     //contour
-                Image contour = panelsJoueurs[joueurID - 1].GetChild(1).GetChild(0).GetChild(particleIndex).GetChild(0).GetComponent<Image>();
-                Arme armeCorrespondante = gameManager.joueurs[joueurID - 1].p.tousLesMeshsDuJoueur[particleIndex].GetComponent<Arme>();
+                            //Panel                    //content   //Boutons   //Croix                  //contour
+        Image contour = panelsJoueurs[joueurID - 1].GetChild(1).GetChild(0).GetChild(particleIndex).GetChild(0).GetComponent<Image>();
+        Arme armeCorrespondante = gameManager.joueurs[joueurID - 1].p.tousLesMeshsDuJoueur[particleIndex].GetComponent<Arme>();
+        
 
-                contour.fillAmount = armeCorrespondante.curExp / armeCorrespondante.maxExp;
+        contour.fillAmount = armeCorrespondante.curExp / armeCorrespondante.maxExp;
             
 
 
-                //Panel                    //content   //Boutons   //Croix             //logo
-                Image armeLogo = panelsJoueurs[joueurID - 1].GetChild(1).GetChild(0).GetChild(particleIndex).GetChild(2).GetComponent<Image>();
-                armeLogo.color = armeCorrespondante.isEvolved ? evolvedColor : normalColor;
-            }
+                        //Panel                    //content   //Boutons   //Croix                  //logo
+        Image armeLogo = panelsJoueurs[joueurID - 1].GetChild(1).GetChild(0).GetChild(particleIndex).GetChild(2).GetComponent<Image>();
+        armeLogo.color = armeCorrespondante.isEvolved ? evolvedColor : normalColor;
     }
 
 
@@ -360,7 +356,7 @@ public class ScoreManager : MonoBehaviour
 
         Arme armeActuelle = gameManager.joueurs[joueurID - 1].p.tousLesMeshsDuJoueur[meshIndex].GetComponent<Arme>();
         //On ne récupère pas l'arme actuelle du joueur, car c'est un passage par référence et on risque de modifier le cooldown de la mauvaise arme si armeActuelle change
-        //Du coup, on ne la récupère pas via armeActuelle
+        //Du coup, on la récupère directement en cherchant parmi toutes les armes du joueur
 
 
         décompte.gameObject.SetActive(true);

@@ -16,9 +16,29 @@ public class PlayerUI : MonoBehaviour
     public Color highHealthColor;
     public Color lowHealthColor;
 
-    private void Awake()
+    [Space(10)]
+
+    public Color j1, j2, j3, j4;
+
+    public void InitializeUI()
     {
         joueurIDText.text = "J" + joueurCorrespondant.p.joueurID;
+
+        switch (joueurCorrespondant.p.joueurID)
+        {
+            case 1:
+                joueurIDText.color = j1;
+                break;
+            case 2:
+                joueurIDText.color = j2;
+                break;
+            case 3:
+                joueurIDText.color = j3;
+                break;
+            case 4:
+                joueurIDText.color = j4;
+                break;
+        }
     }
 
 

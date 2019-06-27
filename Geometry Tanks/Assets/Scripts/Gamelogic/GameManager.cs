@@ -43,6 +43,8 @@ public class GameManager : MonoBehaviour
             StatsSystem s = Instantiate(playerPrefab, GetComponentRandomSpawnPoint(), Quaternion.identity).GetComponent<StatsSystem>();
             s.p.joueurID = i + 1;
             joueurs.Add(s);
+            
+            s.playerUI.InitializeUI();
         }
     }
 
@@ -74,7 +76,11 @@ public class GameManager : MonoBehaviour
     {
         joueurs[joueurID - 1].gameObject.SetActive(false);
 
+        print("start");
+
         yield return new WaitForSeconds(respawnTime);
+
+        print("done");
 
         joueurs[joueurID - 1].gameObject.SetActive(true);
         joueurs[joueurID - 1].isDead = false;

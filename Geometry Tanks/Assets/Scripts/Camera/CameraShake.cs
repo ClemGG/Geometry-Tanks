@@ -28,9 +28,25 @@ public class CameraShake : MonoBehaviour {
     float initialDuration;
     float initialPower;
     Camera cam;
+    Transform t;
+
+    public static CameraShake instance;
+
+    private void Awake()
+    {
+        if (instance)
+        {
+            Destroy(this);
+            return;
+        }
+
+        instance = this;
+    }
+
 
     // Use this for initialization
     void Start () {
+        t = transform;
         cam = GetComponent<Camera>();
         Init();
         
@@ -73,13 +89,13 @@ public class CameraShake : MonoBehaviour {
 
     void ShakeTheCamera()
     {
+        Vector3 shakePos = StartPos + transform.position;
+
         if (shouldShake)
         {
             if (duration > 0 && power > 0)
             {
-                cam.transform.localPosition = StartPos + 
-                                         ((useCircleInsteadOfSphere == true) ? (Vector3)Random.insideUnitCircle : Random.insideUnitSphere) * 
-                                         power;
+                t.position = shakePos + ((useCircleInsteadOfSphere == true) ? (Vector3)Random.insideUnitCircle : Random.insideUnitSphere) * power;
 
                 power -= (useSmoothShake == true) ? ((useSmoothShakeDependingOnDuration == true) ? Time.fixedDeltaTime / duration * power : Time.fixedDeltaTime / duration)
                                                   : ((useSmoothShakeDependingOnDuration == true) ? Time.fixedDeltaTime / duration * power : 0f);
@@ -95,7 +111,7 @@ public class CameraShake : MonoBehaviour {
 
     void Init()
     {
-        StartPos = transform.localPosition;
+        StartPos = t.position;
         initialDuration = duration;
         initialPower = power;
     }
@@ -105,6 +121,6 @@ public class CameraShake : MonoBehaviour {
         shouldShake = false;
         duration = initialDuration;
         power = initialPower;
-        cam.transform.localPosition = StartPos;
+        t.position = StartPos;
     }
 }

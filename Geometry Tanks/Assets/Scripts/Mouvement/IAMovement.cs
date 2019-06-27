@@ -13,7 +13,7 @@ public class IAMovement : MonoBehaviour
 
     [HideInInspector] public IAStats s;
     [HideInInspector] public Transform t, meshToRotate;
-    Rigidbody rb;
+    [HideInInspector] public Rigidbody rb;
     GameManager gameManager;
 
     PlayerMovement joueurASuivre;
@@ -46,8 +46,8 @@ public class IAMovement : MonoBehaviour
 
     [Space(10)]
 
-    Vector3 moveInput, rotInput, moveDir, distanceAuJoueurLePlusProche;
-    [HideInInspector] public Vector3 spawnPos; //On récupère la position de l'enemySpawner propre à cet ennemi, pour éviter qu'il s'en éloigne de trop, comme ça, pas de calcul d'obstacle à faire
+    Vector3 moveInput, rotInput, /*moveDir,*/ distanceAuJoueurLePlusProche;
+    [HideInInspector] public EnemySpawner spawner; //On récupère la position de l'enemySpawner propre à cet ennemi, pour éviter qu'il s'en éloigne de trop, comme ça, pas de calcul d'obstacle à faire
 
     float xVelocity, zVelocity;
 
@@ -62,6 +62,9 @@ public class IAMovement : MonoBehaviour
     private void OnDisable()
     {
         CancelInvoke();
+
+        if(spawner)
+        spawner.SendReadyMessage();
     }
 
 
@@ -80,10 +83,13 @@ public class IAMovement : MonoBehaviour
 
         GetInput();
 
-        if (distanceAuJoueurLePlusProche.sqrMagnitude < dstPoursuite * dstPoursuite)
+        if (joueurASuivre)
         {
-            Tirer();
-        }        
+            if (distanceAuJoueurLePlusProche.sqrMagnitude < dstPoursuite * dstPoursuite)
+            {
+                Tirer();
+            }
+        }
     }
 
 
@@ -106,7 +112,7 @@ public class IAMovement : MonoBehaviour
 
 
 
-    private void GetScripts()
+    public void GetScripts()
     {
         gameManager = GameManager.instance;
         
@@ -157,9 +163,13 @@ public class IAMovement : MonoBehaviour
         }
 
 
-
         distanceAuJoueurLePlusProche = joueurASuivre.t.position - t.position;
-        Vector3 dirNormalized = Vector3.ClampMagnitude(distanceAuJoueurLePlusProche, 1f);
+        Vector3 dirNormalized = distanceAuJoueurLePlusProche.normalized;
+
+
+
+        rotInput = new Vector3(dirNormalized.x, 0f, dirNormalized.z);
+        
 
 
         //C'est pas un déplacement parfait, vu que si on est trop près du point de spawn, l'IA peut nous rentrer dedans
@@ -168,15 +178,15 @@ public class IAMovement : MonoBehaviour
         //Si le joueur est à portée et qu'on n'est pas trop loin, ou que le joueur est plus proche du spawner que nous, on avance
         if (distanceAuJoueurLePlusProche.sqrMagnitude < dstPoursuite * dstPoursuite && 
             distanceAuJoueurLePlusProche.sqrMagnitude > dstStop * dstStop || 
-            (t.position - spawnPos).sqrMagnitude > (joueurASuivre.t.position - spawnPos).sqrMagnitude)
+            (t.position - spawner.t.position).sqrMagnitude > (joueurASuivre.t.position - spawner.t.position).sqrMagnitude)
         {
 
             moveInput.x = Mathf.SmoothDamp(moveInput.x, dirNormalized.x, ref xVelocity, moveSmooth);
             moveInput.z = Mathf.SmoothDamp(moveInput.z, dirNormalized.z, ref zVelocity, moveSmooth);
         }
 
-        //Si on est trop loin du joueur, du spawnPos ou qu'on est dans la limite d'approche du joueur, on s'arrête
-        else if ((t.position - spawnPos).sqrMagnitude > dstAuSpawner * dstAuSpawner || distanceAuJoueurLePlusProche.sqrMagnitude > dstPoursuite * dstPoursuite ||
+        //Si on est trop loin du joueur, du spawnPos.t.position ou qu'on est dans la limite d'approche du joueur, on s'arrête
+        else if ((t.position - spawner.t.position).sqrMagnitude > dstAuSpawner * dstAuSpawner || distanceAuJoueurLePlusProche.sqrMagnitude > dstPoursuite * dstPoursuite ||
                 distanceAuJoueurLePlusProche.sqrMagnitude < dstStop * dstStop && distanceAuJoueurLePlusProche.sqrMagnitude > dstFuite * dstFuite)
         {
             moveInput.x = Mathf.SmoothDamp(moveInput.x, 0f, ref xVelocity, moveSmooth);
@@ -185,8 +195,8 @@ public class IAMovement : MonoBehaviour
 
         //Si le joueur est trop près et qu'on n'est pas trop loin du spawner, ou que le joueur est plus loin du spawner que nous, on recule
         else if(distanceAuJoueurLePlusProche.sqrMagnitude < dstFuite * dstFuite && 
-            ((t.position - spawnPos).sqrMagnitude < dstAuSpawner * dstAuSpawner || 
-            (t.position - spawnPos).sqrMagnitude < (joueurASuivre.t.position - spawnPos).sqrMagnitude))
+            ((t.position - spawner.t.position).sqrMagnitude < dstAuSpawner * dstAuSpawner || 
+            (t.position - spawner.t.position).sqrMagnitude < (joueurASuivre.t.position - spawner.t.position).sqrMagnitude))
         {
 
             moveInput.x = Mathf.SmoothDamp(moveInput.x, -dirNormalized.x, ref xVelocity, moveSmooth);
@@ -194,11 +204,6 @@ public class IAMovement : MonoBehaviour
         }
 
 
-
-        rotInput = new Vector3(dirNormalized.x, 0f, dirNormalized.z);
-
-        if (rotInput != Vector3.zero)
-            moveDir = rotInput.normalized;
 
     }
 
@@ -213,7 +218,7 @@ public class IAMovement : MonoBehaviour
     private void Rotate()
     {
         //On oriente le joueur en fonction de la normale de la surface sur laquelle il marche
-        Quaternion targetRotation = Quaternion.FromToRotation(meshToRotate.forward, moveDir) * meshToRotate.rotation;
+        Quaternion targetRotation = Quaternion.FromToRotation(meshToRotate.forward, rotInput) * meshToRotate.rotation;
         meshToRotate.rotation = Quaternion.Slerp(meshToRotate.rotation, targetRotation, rotSpeed * Time.deltaTime);
     }
 
@@ -234,9 +239,12 @@ public class IAMovement : MonoBehaviour
     {
         float minDst = Mathf.Infinity;
         PlayerMovement joueurLePlusProche = null;
-
+        
         for (int i = 0; i < gameManager.joueurs.Count; i++)
         {
+            if (gameManager.joueurs[i].isDead)
+                continue;
+
             PlayerMovement p = gameManager.joueurs[i].p;
 
             float dst = (t.position - p.t.position).sqrMagnitude;

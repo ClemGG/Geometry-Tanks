@@ -38,6 +38,20 @@ public class MultipleTargetCam : MonoBehaviour {
     [SerializeField] private bool showGizmos;
     private Vector3 newCamPosGizmo;
 
+    public static MultipleTargetCam instance;
+
+
+    private void Awake()
+    {
+        if (instance)
+        {
+            Destroy(this);
+            return;
+        }
+
+        instance = this;
+    }
+
 
     private void Start()
     {

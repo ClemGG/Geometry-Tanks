@@ -8,21 +8,22 @@ public class ExpParticle : MonoBehaviour, IPooledObject
     [Space(10)]
     [Header("Scripts & Components : ")]
     [Space(10)]
-    
+
+    public string[] prefabsToSpawnOnDeath;
+
+
     [HideInInspector] public Transform t;
     SphereCollider c;
     Rigidbody rb;
 
     Transform joueurASuivre;
 
-
-
     [Space(10)]
     [Header("Général : ")]
     [Space(10)]
 
     public Enums.TypeArme typeParticule;
-    bool donne5Pts;
+    public bool donne5Pts;
     
     public float distanceDetection = 5f, duréeAvantActivation = .5f, moveSpeed = 20f, slowSpeed = .5f, forceOnSpawn = .5f;
     float timer;
@@ -53,12 +54,13 @@ public class ExpParticle : MonoBehaviour, IPooledObject
 
     private void OnEnable()
     {
-        c.enabled = true;
         joueurASuivre = null;
-        timer = 0f;
+        GetScripts();
 
-        if(co == null)
-        co = StartCoroutine(ActiverDetectionAprèsDélai());
+        if (co == null)
+        co = StartCoroutine(ActiverDetectionAprèsDélai(true));
+
+        SpawnPrefabsOnDeath();
     }
 
 
@@ -68,7 +70,7 @@ public class ExpParticle : MonoBehaviour, IPooledObject
         GetScripts();
 
         if (co == null)
-            co = StartCoroutine(ActiverDetectionAprèsDélai());
+            co = StartCoroutine(ActiverDetectionAprèsDélai(true));
     }
 
 
@@ -77,7 +79,22 @@ public class ExpParticle : MonoBehaviour, IPooledObject
     {
         if (joueurASuivre)
         {
-            MoveTowardsPlayer();
+            if (!joueurASuivre.GetComponent<StatsSystem>().isDead)
+            {
+                if (co != null)
+                {
+                    StopCoroutine(co);
+                    co = null;
+
+                }
+
+                MoveTowardsPlayer();
+            }
+        }
+        else
+        {
+            if (co == null)
+                co = StartCoroutine(ActiverDetectionAprèsDélai(true));
         }
     }
 
@@ -89,14 +106,13 @@ public class ExpParticle : MonoBehaviour, IPooledObject
 
 
 
-
-    private IEnumerator ActiverDetectionAprèsDélai()
+    //Ralentit la particule après son spawn, et active la détection de joueurs une fois stoppée
+    private IEnumerator ActiverDetectionAprèsDélai(bool désactiverCollider)
     {
-        c.enabled = false;
-
+        c.enabled = !désactiverCollider;
         float timer = 0f;
 
-        while(timer < duréeAvantActivation)
+        while (timer < duréeAvantActivation)
         {
             timer += Time.deltaTime;
             rb.velocity *= slowCurve.Evaluate(timer) * slowSpeed;
@@ -145,13 +161,71 @@ public class ExpParticle : MonoBehaviour, IPooledObject
 
     private void MoveTowardsPlayer()
     {
-        timer += Time.deltaTime;
-        Vector3 moveDir = (joueurASuivre.position - t.position).normalized;
-        Vector3 dir = (joueurASuivre.position - t.position).normalized;
+        int index = 0;
 
-        rb.MovePosition(t.position + dir * moveSpeed * moveCurve.Evaluate(timer));
+        switch (typeParticule)
+        {
+            case Enums.TypeArme.Bleu:
+                index = 0;
+                break;
+            case Enums.TypeArme.Rouge:
+                index = 1;
+                break;
+            case Enums.TypeArme.Jaune:
+                index = 2;
+                break;
+            case Enums.TypeArme.Vert:
+                index = 3;
+                break;
+        }
 
-        if(moveDir.sqrMagnitude < .1f * .1f)
+        Arme armeCorrespondante = joueurASuivre.GetChild(index).GetComponent<Arme>();
+
+        if (!armeCorrespondante.isEvolved)
+        {
+
+            timer += Time.deltaTime;
+            Vector3 moveDir = (joueurASuivre.position - t.position).normalized;
+            Vector3 dir = (joueurASuivre.position - t.position).normalized;
+
+            rb.MovePosition(t.position + dir * moveSpeed * moveCurve.Evaluate(timer));
+
+            if (moveDir.magnitude < .5f)
+            {
+                armeCorrespondante.AddExp(donne5Pts ? 5 : 1);
+
+                SpawnPrefabsOnDeath();
+
+                gameObject.SetActive(false);
+            }
+        }
+        else
+        {
+            joueurASuivre = null;
+
+            if (co == null)
+                co = StartCoroutine(ActiverDetectionAprèsDélai(false));
+
+        }
+    }
+
+
+
+
+    private void SpawnPrefabsOnDeath()
+    {
+        for (int i = 0; i < prefabsToSpawnOnDeath.Length; i++)
+        {
+            ObjectPooler.instance.SpawnFromPool(prefabsToSpawnOnDeath[i], t.position, Quaternion.identity);
+        }
+    }
+
+
+
+
+    private void OnTriggerEnter(Collider col)
+    {
+        if (col.CompareTag("Player"))
         {
             int index = 0;
 
@@ -171,33 +245,15 @@ public class ExpParticle : MonoBehaviour, IPooledObject
                     break;
             }
 
-            Arme armeCorrespondante = joueurASuivre.GetChild(index).GetComponent<Arme>();
-            armeCorrespondante.AddExp(donne5Pts ? 5 : 1);
-            gameObject.SetActive(false);
-        }
-    }
+            Arme armeCorrespondante = col.transform.parent.GetChild(index).GetComponent<Arme>();
 
-
-
-
-
-
-
-
-
-
-    
-
-
-
-    private void OnTriggerEnter(Collider col)
-    {
-        if (col.CompareTag("Player"))
-        {
-            joueurASuivre = col.transform;
+            if (!armeCorrespondante.isEvolved)
+            {
+                joueurASuivre = col.transform.parent;
+                c.enabled = false;
+            }
         }
 
-        c.enabled = false;
     }
 
 

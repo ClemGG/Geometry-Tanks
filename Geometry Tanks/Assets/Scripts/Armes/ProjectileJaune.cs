@@ -24,12 +24,16 @@ public class ProjectileJaune : Projectile
     {
         joueurASuivre = ChercherJoueurLePlusProche();
         base.FixedUpdate();
-        Rotate();
     }
 
 
     protected override void Rotate()
     {
+        if (!joueurASuivre)
+        {
+            return;
+        }
+
         Vector3 dir = (joueurASuivre.position - t.position).normalized;
 
         //On oriente le mesh du missile en fonction de sa direction par rapport au joueur
@@ -67,7 +71,7 @@ public class ProjectileJaune : Projectile
                         joueurLePlusProche = m.t;
                     }
                 }
-                else
+                else if(entités[i].GetComponent<PlayerMovement>())
                 {
                     PlayerMovement p = entités[i].GetComponent<PlayerMovement>();
 
@@ -87,6 +91,56 @@ public class ProjectileJaune : Projectile
     }
 
 
+
+    protected override void OnTriggerEnter(Collider c)
+    {
+        if (c.CompareTag("Wall"))
+        {
+
+            //if (projectileID != 0 && isEvolved)
+            //    CameraShake.instance.Shake();
+
+            SpawnPrefabsOnDeath();
+            gameObject.SetActive(false);
+            return;
+        }
+
+        
+        for (int i = 0; i < collisionTags.Length; i++)
+        {
+            if (c.CompareTag("Player"))
+            {
+                StatsSystem s = c.transform.transform.parent.GetComponent<StatsSystem>();
+
+                if (s)
+                {
+                    if (s.p.joueurID != projectileID)
+                    {
+                    //    if(projectileID != 0 && isEvolved)
+                    //    CameraShake.instance.Shake();
+
+                        SpawnPrefabsOnDeath();
+                        gameObject.SetActive(false);
+                    }
+                }
+            }
+            else if (c.CompareTag("IA"))
+            {
+                IAStats s = c.GetComponent<IAStats>();
+
+                if (s)
+                {
+                    if (projectileID != 0)
+                    {
+                        //CameraShake.instance.Shake();
+                        SpawnPrefabsOnDeath();
+                        gameObject.SetActive(false);
+                    }
+                }
+            }
+        }
+        
+    }
 
 
 

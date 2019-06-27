@@ -10,7 +10,7 @@ public class Arme : MonoBehaviour
     [Space(10)]
 
     public string bulletTag; //Le tag de du projectile à spawner
-    Transform pointDeTir;
+    public Transform pointDeTir;
 
     [Space(10)]
     [Header("Général : ")]
@@ -32,38 +32,51 @@ public class Arme : MonoBehaviour
     // Appelé dans l'Awake pour être sûr que les UIs soient bien mis à jour
     protected void Awake()
     {
-        timer = cadenceDeTir;
+        timer = 0f;
         peutTirer = true;
     }
 
 
     protected void Update()
     {
-        if(timer < cadenceDeTir)
+        if(timer > 0f)
         {
-            timer += Time.deltaTime;
+            timer -= Time.deltaTime;
         }
 
-        peutTirer = timer >= cadenceDeTir;
+        peutTirer = timer <= 0f;
     }
 
 
     public void Tirer()
     {
-        timer = 0f;
+        timer = cadenceDeTir;
         peutTirer = false;
 
         Projectile p = ObjectPooler.instance.SpawnFromPool(bulletTag, pointDeTir.position, pointDeTir.rotation).GetComponent<Projectile>();
 
 
-        PlayerMovement parent = transform.parent.GetComponent<PlayerMovement>();
+        Transform parent = transform.parent;
+        PlayerMovement pm = parent.GetComponent<PlayerMovement>();
+        IAMovement im = parent.GetComponent<IAMovement>();
 
-        if(parent.CompareTag("Player"))
-            p.projectileID = parent.joueurID;
-        else
+        if (pm)
+        {
+            p.projectileID = pm.joueurID;
+            p.rb.velocity = pm.rb.velocity;
+        }
+        else if(im)
+        {
             p.projectileID = 0;
+            p.rb.velocity = im.rb.velocity;
+        }
 
-        p.rb.velocity = parent.rb.velocity;
+
+        //Si c'est l'onde de choc rouge, on l'attache au joueur pour qu'elle le suive, puis on la détache quand elle est finie
+        if (p.typeDeProjectile == Enums.TypeArme.Rouge)
+        {
+            p.transform.parent = parent;
+        }
 
     }
 
@@ -75,6 +88,9 @@ public class Arme : MonoBehaviour
         if(curExp == maxExp)
         {
             isEvolved = true;
+            PlayerMovement parent = transform.parent.GetComponent<PlayerMovement>();
+            parent.OnWeaponEvolved(this);
+
         }
     }
 
@@ -83,7 +99,7 @@ public class Arme : MonoBehaviour
     //Quand l'arme est désactivée, le joueur est mort. On la remet donc à jour pour pouvoir la réutiliser après le respawn
     private void OnDisable()
     {
-        timer = cadenceDeTir;
+        timer = 0f;
         peutTirer = true;
     }
 }

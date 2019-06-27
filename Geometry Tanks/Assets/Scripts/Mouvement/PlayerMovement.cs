@@ -69,32 +69,32 @@ public class PlayerMovement : MonoBehaviour
         
         GetInput();
 
-
+        //print($"X : {x}, O : {o}, V : {v}, B: {b}");
 
         if (x)
         {
-            if (typeDuVaisseau != armeActuelle.typeArme)
+            if (typeDuVaisseau != Enums.TypeArme.Bleu)
                 ChangerArmeEtVaisseau(Enums.TypeArme.Bleu);
             else
                 Tirer();
         }
-        else if (o)
+        if (o)
         {
-            if (typeDuVaisseau != armeActuelle.typeArme)
+            if (typeDuVaisseau != Enums.TypeArme.Rouge)
                 ChangerArmeEtVaisseau(Enums.TypeArme.Rouge);
             else
                 Tirer();
         }
-        else if (v)
+        if (v)
         {
-            if (typeDuVaisseau != armeActuelle.typeArme)
+            if (typeDuVaisseau != Enums.TypeArme.Jaune)
                 ChangerArmeEtVaisseau(Enums.TypeArme.Jaune);
             else
                 Tirer();
         }
-        else if (b)
+        if (b)
         {
-            if (typeDuVaisseau != armeActuelle.typeArme)
+            if (typeDuVaisseau != Enums.TypeArme.Vert)
                 ChangerArmeEtVaisseau(Enums.TypeArme.Vert);
             else
                 Tirer();
@@ -128,6 +128,10 @@ public class PlayerMovement : MonoBehaviour
     }
 
 
+
+
+
+
     private void GetInput()
     {
         hInput = Input.GetAxis("Horizontal" + joueurID.ToString());
@@ -148,8 +152,12 @@ public class PlayerMovement : MonoBehaviour
         
     }
 
+
+
     private void ChangerArmeEtVaisseau(Enums.TypeArme nouveauTypeArme)
     {
+
+        typeDuVaisseau = nouveauTypeArme;
 
         if (tousLesMeshsDuJoueur == null)
         {
@@ -190,18 +198,43 @@ public class PlayerMovement : MonoBehaviour
                 armeActuelle = tousLesMeshsDuJoueur[i].GetComponent<Arme>();
             }
 
-            MeshRenderer[] meshes = tousLesMeshsDuJoueur[i].GetComponentsInChildren<MeshRenderer>();
+            Collider[] cols = tousLesMeshsDuJoueur[i].GetComponents<Collider>();
 
-            for (int j = 0; j < meshes.Length; j++)
+            for (int k = 0; k < cols.Length; k++)
             {
-                meshes[j].enabled = i == indexMeshActuel;
+                cols[k].enabled = i == indexMeshActuel;
             }
-            /* Au lieu de désactiver les meshs et leurs armes avec, on ne désactive que les meshRenderers et on garde les armes activées.
-             * Comme ça elles pourront continuer de calculer leur cooldown seules sans crainte d'interruption, et elles ne seront pas appelées puisqu'on change d'arme en même temps que de mesh.
+            /*  On désactive tous les colliders des vaisseaux qui ne sont pas affichés à l'écran
+             */
+
+            for (int j = 0; j < tousLesMeshsDuJoueur[i].childCount; j++)
+            {
+                tousLesMeshsDuJoueur[i].GetChild(j).gameObject.SetActive(i == indexMeshActuel);
+            }
+            /* Finalement, on récupère tous les enfants du mesh actuel et on les désactive. Comme ça, on désactive collisions, meshs et trails tout en gardant l'arme activée
              */
 
         }
     }
+
+
+
+
+
+
+
+    // Si l'arme que l'on porte actuellement vient d'évoluer, on change l'apparence actuelle du vaisseau et on utilise son arme évoluée
+    public void OnWeaponEvolved(Arme armeEvoluée)
+    {
+        if(armeEvoluée.typeArme == armeActuelle.typeArme)
+        {
+            ChangerArmeEtVaisseau(armeEvoluée.typeArme);
+        }
+    }
+
+
+
+
 
 
 
@@ -215,9 +248,13 @@ public class PlayerMovement : MonoBehaviour
 
     private void Rotate()
     {
-        //On oriente le joueur en fonction de la normale de la surface sur laquelle il marche
-        Quaternion targetRotation = Quaternion.FromToRotation(meshToRotate.forward, moveDir) * meshToRotate.rotation;
-        meshToRotate.rotation = Quaternion.Slerp(meshToRotate.rotation, targetRotation, rotSpeed * Time.deltaTime);
+        for (int i = 0; i < tousLesMeshsDuJoueur.Length; i++)
+        {
+
+            //On oriente le joueur en fonction de la normale de la surface sur laquelle il marche
+            Quaternion targetRotation = Quaternion.FromToRotation(tousLesMeshsDuJoueur[i].forward, moveDir) * tousLesMeshsDuJoueur[i].rotation;
+            tousLesMeshsDuJoueur[i].rotation = Quaternion.Slerp(tousLesMeshsDuJoueur[i].rotation, targetRotation, rotSpeed * Time.deltaTime);
+        }
     }
 
 
@@ -241,6 +278,11 @@ public class PlayerMovement : MonoBehaviour
 #if UNITY_EDITOR
 
     private void Reset()
+    {
+        GetScripts();
+    }
+
+    private void OnValidate()
     {
         GetScripts();
     }

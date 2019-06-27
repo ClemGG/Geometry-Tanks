@@ -18,7 +18,8 @@ public class AOE : MonoBehaviour
     [Space(10)]
     [Header("Général : ")]
     [Space(10)]
-    
+
+    public bool isEvolved;
     public Enums.TypeArme typeAOE;
     public string[] collisionTags;   //Le type d'ennemi qu'il peut toucher (joueur ou IA, ou les deux)
     public int dégâts;
@@ -70,19 +71,40 @@ public class AOE : MonoBehaviour
 
     protected virtual void OnTriggerEnter(Collider c)
     {
+
         for (int i = 0; i < collisionTags.Length; i++)
         {
             if (c.CompareTag(collisionTags[i]))
             {
                 if (c.CompareTag("Player"))
                 {
-                    c.GetComponent<StatsSystem>().OnHit(dégâts, projectileID, typeAOE);
+                    StatsSystem s = c.transform.transform.parent.GetComponent<StatsSystem>();
+
+                    if (s)
+                    {
+                        if (s.p.joueurID != projectileID)
+                        {
+                            s.OnHit(dégâts, projectileID, typeAOE, isEvolved); //Puisqu'on met le trigger sur chacun des meshs, on va chercher le "Player" donc le parent
+                            
+                            gameObject.SetActive(false);
+                        }
+                    }
                 }
                 else if (c.CompareTag("IA"))
                 {
-                    c.GetComponent<IAStats>().OnHit(dégâts, typeAOE);
+                    IAStats s = c.GetComponent<IAStats>();
+
+                    if (s)
+                    {
+                        if (projectileID != 0)
+                        {
+                            s.OnHit(dégâts, typeAOE, isEvolved); //Puisqu'on met le trigger sur chacun des meshs, on va chercher le "Player" donc le parent
+                            
+                            gameObject.SetActive(false);
+                        }
+                    }
                 }
-                
+
             }
         }
     }

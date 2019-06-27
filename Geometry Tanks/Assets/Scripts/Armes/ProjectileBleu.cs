@@ -8,6 +8,8 @@ public class ProjectileBleu : Projectile
 
     protected override void FixedUpdate()
     {
+        base.FixedUpdate();
+
         if (isEvolved)
         {
             RayCast();  //Si le projectile bleu vient d'une arme évoluée, on le fait rebondir sur les murs de l'arène
