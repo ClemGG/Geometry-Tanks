@@ -63,6 +63,9 @@ public class SceneFader : MonoBehaviour {
     /// </summary>
     public void FadeToScene(int sceneIndex)
     {
+        if(AudioManager.instance)
+            AudioManager.instance.Play("TimesupOuverture");
+
         StartCoroutine(FadeOut(sceneIndex));
     }
 
@@ -73,6 +76,9 @@ public class SceneFader : MonoBehaviour {
     /// </summary>
     public void FadeToQuitScene()
     {
+        if(AudioManager.instance)
+            AudioManager.instance.Play("TimesupOuverture");
+
         StartCoroutine(FadeQuit());
     }
 

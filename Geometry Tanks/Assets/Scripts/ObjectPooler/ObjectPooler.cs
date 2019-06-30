@@ -55,9 +55,9 @@ public class ObjectPooler : MonoBehaviour {
         }
         GameObject obj = poolDictionary[tag].Dequeue();
 
-        obj.SetActive(true);
         obj.transform.position = pos;
         obj.transform.rotation = rot;
+        obj.SetActive(true);
 
         IPooledObject pooledObj = obj.GetComponent<IPooledObject>();
 
@@ -83,10 +83,10 @@ public class ObjectPooler : MonoBehaviour {
         }
         GameObject obj = poolDictionary[tag].Dequeue();
 
-        obj.SetActive(true);
         obj.transform.position = pos;
         obj.transform.rotation = rot;
         obj.transform.parent = parent;
+        obj.SetActive(true);
 
         IPooledObject pooledObj = obj.GetComponent<IPooledObject>();
 

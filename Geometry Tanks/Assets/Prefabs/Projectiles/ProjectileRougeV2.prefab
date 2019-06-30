@@ -9673,7 +9673,7 @@ MonoBehaviour:
   isEvolved: 1
   typeDeProjectile: 1
   collisionTags:
-  - Plyaer
+  - Player
   - IA
   "d\xE9g\xE2ts": 10
   moveCurve:
@@ -9702,7 +9702,7 @@ MonoBehaviour:
     m_RotationOrder: 4
   "dur\xE9eDeVie": 0.5
   moveSpeed: 10
-  radiusSpeed: 4
+  radiusSpeed: 9
   radiusCurve:
     serializedVersion: 2
     m_Curve:
@@ -9716,7 +9716,7 @@ MonoBehaviour:
       inWeight: 0.33333334
       outWeight: 0.33333334
     - serializedVersion: 3
-      time: 1
+      time: 0.29766846
       value: 1
       inSlope: 1
       outSlope: 1

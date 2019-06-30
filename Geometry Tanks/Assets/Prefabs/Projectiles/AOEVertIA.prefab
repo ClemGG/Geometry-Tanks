@@ -65,7 +65,7 @@ MonoBehaviour:
   typeAOE: 3
   collisionTags:
   - Player
-  "d\xE9g\xE2ts": 3
+  "d\xE9g\xE2ts": 1
   "dur\xE9eDeVie": 0.2
   radius: 4
 --- !u!95 &867424032616898350

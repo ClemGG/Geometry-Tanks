@@ -50,6 +50,11 @@ public class Arme : MonoBehaviour
 
     public void Tirer()
     {
+
+        PlayTirerSound();
+        
+
+
         timer = cadenceDeTir;
         peutTirer = false;
 
@@ -80,18 +85,44 @@ public class Arme : MonoBehaviour
 
     }
 
+    private void PlayTirerSound()
+    {
+        switch (typeArme)
+        {
+            case Enums.TypeArme.Bleu:
+                AudioManager.instance.Play(isEvolved ? "BlueShot" : "sonTir");
+                break;
+            case Enums.TypeArme.Rouge:
+                AudioManager.instance.Play(isEvolved ? "RedShot V2" : "RedShot");
+                break;
+            case Enums.TypeArme.Jaune:
+                AudioManager.instance.Play("YellowShot");
+                break;
+            case Enums.TypeArme.Vert:
+                AudioManager.instance.Play("GreenShot");
+                break;
+        }
+    }
+
+
+
+
+
     public void AddExp(int pts)
     {
         curExp += pts;
         curExp = Mathf.Clamp(curExp, 0, maxExp);
+        
+        PlayerMovement parent = transform.parent.GetComponent<PlayerMovement>();
 
-        if(curExp == maxExp)
+        if (curExp == maxExp)
         {
+            AudioManager.instance.Play("changementVaisseau");
             isEvolved = true;
-            PlayerMovement parent = transform.parent.GetComponent<PlayerMovement>();
             parent.OnWeaponEvolved(this);
 
         }
+        ScoreManager.instance.UpdateExpUI(parent.joueurID, (int)typeArme);
     }
 
 

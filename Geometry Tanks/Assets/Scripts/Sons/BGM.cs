@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-[RequireComponent(typeof(AudioSource))]
 public class BGM : MonoBehaviour
 {
     public static BGM instance;
@@ -17,5 +16,12 @@ public class BGM : MonoBehaviour
 
         instance = this;
         DontDestroyOnLoad(gameObject);
+    }
+
+
+
+    private void Start()
+    {
+        AudioManager.instance.Play("BGM");
     }
 }

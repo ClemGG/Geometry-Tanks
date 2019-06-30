@@ -42,7 +42,7 @@ public class ScoreManager : MonoBehaviour
 
     [HideInInspector] public bool partieTerminée = false;
 
-
+    bool canLeave = false;
 
 
     public static ScoreManager instance;
@@ -57,7 +57,7 @@ public class ScoreManager : MonoBehaviour
         }
 
         instance = this;
-
+        canLeave = false;
     }
 
 
@@ -87,6 +87,17 @@ public class ScoreManager : MonoBehaviour
     private void Update()
     {
         MatchCountdown();
+
+        if (canLeave)
+        {
+            for (int i = 1; i <= Input.GetJoystickNames().Length; i++)
+            {
+                if (Input.GetButtonDown("Croix" + i.ToString()))
+                {
+                    SceneFader.instance.FadeToScene(0);
+                }
+            }
+        }
     }
 
 
@@ -148,6 +159,9 @@ public class ScoreManager : MonoBehaviour
 
     public void EndGame()
     {
+        if(AudioManager.instance)
+        AudioManager.instance.Play("TimesupOuverture");
+
         partieTerminée = true;
         gameManager.StopAllPlayersMovement();
 
@@ -185,11 +199,11 @@ public class ScoreManager : MonoBehaviour
             str = string.Format("{0} and {1}", str, GetWinner()[GetWinner().Count - 1].p.joueurID.ToString());
 
 
-            matchCanvas.transform.GetChild(1).GetChild(1).GetComponent<TextMeshProUGUI>().text = "Victoire des joueurs " + str + " !";
+            matchCanvas.transform.GetChild(2).GetChild(1).GetChild(0).GetComponent<TextMeshProUGUI>().text = "Victoire des joueurs " + str + " !";
         }
         else if (GetWinner().Count == 1)
         {
-            matchCanvas.transform.GetChild(1).GetChild(1).GetComponent<TextMeshProUGUI>().text = "Victoire du joueur " + GetWinner()[0].p.joueurID.ToString() + " !";
+            matchCanvas.transform.GetChild(2).GetChild(1).GetChild(0).GetComponent<TextMeshProUGUI>().text = "Victoire du joueur " + GetWinner()[0].p.joueurID.ToString() + " !";
         }
 
 
@@ -198,9 +212,15 @@ public class ScoreManager : MonoBehaviour
 
         //Puis on active le tableau des scores
         matchCanvas.transform.GetChild(2).gameObject.SetActive(true);
+        SceneFader.instance.gameObject.SetActive(true);
 
         Cursor.visible = true;
         Cursor.lockState = CursorLockMode.None;
+
+        canLeave = true;
+
+        if(AudioManager.instance)
+        AudioManager.instance.Play("TimesupFermeture");
     }
 
 
@@ -213,8 +233,10 @@ public class ScoreManager : MonoBehaviour
 
         for (int i = 0; i < gameManager.joueurs.Count; i++)
         {
-            matchCanvas.transform.GetChild(1).GetChild(0).GetChild(i + 1).GetChild(1).GetComponent<TextMeshProUGUI>().text = gameManager.joueurs[i].kills + "/" + gameManager.joueurs[i].deaths;
-            matchCanvas.transform.GetChild(1).GetChild(0).GetChild(i + 1).GetChild(2).GetComponent<TextMeshProUGUI>().text = gameManager.joueurs[i].GetKDR().ToString();
+                                  //tableau   //Panel     //scores    //scoreJ1   //fond      //kdr
+            matchCanvas.transform.GetChild(2).GetChild(1).GetChild(2).GetChild(i).GetChild(0).GetChild(1).GetComponent<TextMeshProUGUI>().text = gameManager.joueurs[i].kills.ToString();
+            matchCanvas.transform.GetChild(2).GetChild(1).GetChild(2).GetChild(i).GetChild(0).GetChild(2).GetComponent<TextMeshProUGUI>().text = gameManager.joueurs[i].deaths.ToString();
+            matchCanvas.transform.GetChild(2).GetChild(1).GetChild(2).GetChild(i).GetChild(0).GetChild(3).GetComponent<TextMeshProUGUI>().text = gameManager.joueurs[i].GetKDR().ToString();
         }
 
         for (int i = 0; i < gameManager.joueurs.Count; i++)
@@ -318,16 +340,16 @@ public class ScoreManager : MonoBehaviour
     public void UpdateExpUI(int joueurID, int particleIndex)    
     {
 
-                            //Panel                    //content   //Boutons   //Croix                  //contour
+
+                        //Panel                    //content   //Boutons   //Croix                  //contour
         Image contour = panelsJoueurs[joueurID - 1].GetChild(1).GetChild(0).GetChild(particleIndex).GetChild(0).GetComponent<Image>();
         Arme armeCorrespondante = gameManager.joueurs[joueurID - 1].p.tousLesMeshsDuJoueur[particleIndex].GetComponent<Arme>();
         
 
-        contour.fillAmount = armeCorrespondante.curExp / armeCorrespondante.maxExp;
-            
+        contour.fillAmount = (float)armeCorrespondante.curExp / (float)armeCorrespondante.maxExp;
 
 
-                        //Panel                    //content   //Boutons   //Croix                  //logo
+                         //Panel                    //content   //Boutons   //Croix                  //logo
         Image armeLogo = panelsJoueurs[joueurID - 1].GetChild(1).GetChild(0).GetChild(particleIndex).GetChild(2).GetComponent<Image>();
         armeLogo.color = armeCorrespondante.isEvolved ? evolvedColor : normalColor;
     }

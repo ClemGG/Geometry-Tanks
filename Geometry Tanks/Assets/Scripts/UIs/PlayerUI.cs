@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using System;
 
 public class PlayerUI : MonoBehaviour
 {
@@ -54,4 +55,34 @@ public class PlayerUI : MonoBehaviour
         barreDeVie.color = Color.Lerp(lowHealthColor, highHealthColor, barreDeVie.fillAmount);
     }
 
+    public void InitializeUI(List<GameManager.Joystick> joysticks)
+    {
+        int nouvelIndex = 0;
+
+        for (int i = 0; i < joysticks.Count; i++)
+        {
+            if (joueurCorrespondant.p.joueurID != joysticks[i].id)
+                continue;
+
+            nouvelIndex = i + 1;
+            joueurIDText.text = "J" + (i+1).ToString();
+        }
+
+
+        switch (nouvelIndex)
+        {
+            case 1:
+                joueurIDText.color = j1;
+                break;
+            case 2:
+                joueurIDText.color = j2;
+                break;
+            case 3:
+                joueurIDText.color = j3;
+                break;
+            case 4:
+                joueurIDText.color = j4;
+                break;
+        }
+    }
 }

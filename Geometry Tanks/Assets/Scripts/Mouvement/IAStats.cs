@@ -79,7 +79,12 @@ public class IAStats : MonoBehaviour
         {
             curHealth = 0;
             Die();
+            AudioManager.instance.Play("death");
+            return;
         }
+
+        AudioManager.instance.Play("hit");
+
     }
 
 
@@ -106,9 +111,13 @@ public class IAStats : MonoBehaviour
 
             curHealth = 0;
             Die();
+            AudioManager.instance.Play("death");
 
             return;
         }
+
+        AudioManager.instance.Play("hit");
+
 
         if (typeDeProjectile == Enums.TypeArme.Vert)
         {

@@ -124,6 +124,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   prefabsToSpawnOnDeath:
   - AOEVertV2
+  - SpawnersVertV2
   projectileID: 0
   rb: {fileID: 5805859754694073293}
   isEvolved: 1

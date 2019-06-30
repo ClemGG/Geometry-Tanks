@@ -41,7 +41,7 @@ public class MainMenuButtons : MonoBehaviour {
 
     public void Play()
     {
-        //GetComponent<AudioSource>().Play();
+        AudioManager.instance.Play("ButtonPressed");
         sf.FadeToScene(1);
     }
 
@@ -52,6 +52,8 @@ public class MainMenuButtons : MonoBehaviour {
 
     public void Rules()
     {
+        AudioManager.instance.Play("ButtonPressed");
+
         if (showControls)
             return;
 
@@ -69,6 +71,8 @@ public class MainMenuButtons : MonoBehaviour {
 
     public void Controls()
     {
+
+        AudioManager.instance.Play("ButtonPressed");
 
         if (showRules)
             return;

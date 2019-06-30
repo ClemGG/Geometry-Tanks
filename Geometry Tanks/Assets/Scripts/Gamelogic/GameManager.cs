@@ -23,6 +23,29 @@ public class GameManager : MonoBehaviour
 
     public static GameManager instance;
 
+
+
+    public struct Joystick
+    {
+        public string name;
+        public int id;
+
+        public Joystick(string name, int id)
+        {
+            this.name = name;
+            this.id = id;
+        }
+    }
+    public List<Joystick> joysticks;
+
+
+
+
+
+
+
+
+
     private void Awake()
     {
         if (instance)
@@ -36,15 +59,34 @@ public class GameManager : MonoBehaviour
 
     }
 
+    //private void Update()
+    //{
+    //    print(Input.GetJoystickNames().Length);
+    //    for (int i = 0; i < Input.GetJoystickNames().Length; i++)
+    //    {
+    //        print($"Manette n°{i}, nom : \"{Input.GetJoystickNames()[i]}\".");
+    //    }
+    //}
+
     private void SpawnJoueurs()
     {
+        joysticks = new List<Joystick>();
+        int jIndex = 0;
+
         for (int i = 0; i < Input.GetJoystickNames().Length; i++)
         {
-            StatsSystem s = Instantiate(playerPrefab, GetComponentRandomSpawnPoint(), Quaternion.identity).GetComponent<StatsSystem>();
-            s.p.joueurID = i + 1;
-            joueurs.Add(s);
-            
-            s.playerUI.InitializeUI();
+            if (jIndex <= 3 && Input.GetJoystickNames()[i] != string.Empty)
+            {
+                Joystick j = new Joystick(Input.GetJoystickNames()[i], i+1);
+                joysticks.Add(j);
+
+                StatsSystem s = Instantiate(playerPrefab, GetComponentRandomSpawnPoint(), Quaternion.identity).GetComponent<StatsSystem>();
+                s.p.joueurID = j.id;
+                joueurs.Add(s);
+
+                s.playerUI.InitializeUI(joysticks);
+                jIndex++; //On l'incrémente à la fin. Comme ça, si on a 5 manettes enregistrées mais seulement 4 de connectées, il prendra les 4 premières qui seront connectées
+            }
         }
     }
 
@@ -71,22 +113,32 @@ public class GameManager : MonoBehaviour
 
 
 
+    public void RespawnPlayerOnDeath(int joueurID)
+    {
+        StartCoroutine(RespawnPlayer(joueurID));    //IMPORTANT : Ne pas appeler les Coroutines sur les objets qui seront désactivés par la Coroutine en question, sinon ça bloquera toute la fonction
+    }
 
-    public IEnumerator RespawnPlayerOnDeath(int joueurID)
+    public IEnumerator RespawnPlayer(int joueurID)
     {
         joueurs[joueurID - 1].gameObject.SetActive(false);
 
-        print("start");
-
         yield return new WaitForSeconds(respawnTime);
-
-        print("done");
 
         joueurs[joueurID - 1].gameObject.SetActive(true);
         joueurs[joueurID - 1].isDead = false;
 
+
         joueurs[joueurID - 1].p.t.position = GetComponentRandomSpawnPoint();
         joueurs[joueurID - 1].p.meshToRotate.rotation = Quaternion.identity;
+        joueurs[joueurID - 1].p.ChangerArmeEtVaisseau(joueurs[joueurID - 1].p.typeDuVaisseau);
+
+        joueurs[joueurID - 1].curHealth = joueurs[joueurID - 1].maxHealth;
+        joueurs[joueurID - 1].playerUI.UpdateHealthUI();
+
+
+        ScoreManager.instance.InitializePlayerUI(joueurID);
+        //On remet à jour tous les UIs au moment de la mort et du respawn du joueur
+
     }
 
 
@@ -98,6 +150,13 @@ public class GameManager : MonoBehaviour
         for (int i = 0; i < joueurs.Count; i++)
         {
             joueurs[i].partieTerminée = true;
+        }
+
+        IAStats[] ias = FindObjectsOfType<IAStats>();
+
+        for (int i = 0; i < ias.Length; i++)
+        {
+            ias[i].partieTerminée = true;
         }
     }
 }

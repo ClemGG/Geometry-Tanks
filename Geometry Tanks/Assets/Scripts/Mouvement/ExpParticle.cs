@@ -129,9 +129,10 @@ public class ExpParticle : MonoBehaviour, IPooledObject
     //Interface appelée par l'ObjectPooler
     public void OnObjectSpawn()
     {
+        int alea = Random.Range(0, 2);
 
-        float xForce = Random.Range(-forceOnSpawn, forceOnSpawn);
-        float zForce = Random.Range(-forceOnSpawn, forceOnSpawn);
+        float xForce = alea == 0 ? -forceOnSpawn : forceOnSpawn;
+        float zForce = alea == 0 ? -forceOnSpawn : forceOnSpawn;
 
         Vector3 newForce = new Vector3(xForce, 0f, zForce);
 
@@ -185,16 +186,22 @@ public class ExpParticle : MonoBehaviour, IPooledObject
         {
 
             timer += Time.deltaTime;
-            Vector3 moveDir = (joueurASuivre.position - t.position).normalized;
+            Vector3 moveDir = (joueurASuivre.position - t.position);
             Vector3 dir = (joueurASuivre.position - t.position).normalized;
 
             rb.MovePosition(t.position + dir * moveSpeed * moveCurve.Evaluate(timer));
-
-            if (moveDir.magnitude < .5f)
+            
+            if (moveDir.magnitude < 1f)
             {
                 armeCorrespondante.AddExp(donne5Pts ? 5 : 1);
 
                 SpawnPrefabsOnDeath();
+
+                if(co != null)
+                {
+                    StopCoroutine(co);
+                    co = null;
+                }
 
                 gameObject.SetActive(false);
             }

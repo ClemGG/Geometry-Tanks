@@ -86,7 +86,6 @@ public class AOE : MonoBehaviour
                         {
                             s.OnHit(dégâts, projectileID, typeAOE, isEvolved); //Puisqu'on met le trigger sur chacun des meshs, on va chercher le "Player" donc le parent
                             
-                            gameObject.SetActive(false);
                         }
                     }
                 }
@@ -100,7 +99,6 @@ public class AOE : MonoBehaviour
                         {
                             s.OnHit(dégâts, typeAOE, isEvolved); //Puisqu'on met le trigger sur chacun des meshs, on va chercher le "Player" donc le parent
                             
-                            gameObject.SetActive(false);
                         }
                     }
                 }

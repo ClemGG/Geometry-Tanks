@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 2289153316081191950}
   - component: {fileID: 2036300715053521111}
   - component: {fileID: 1167781158072250587}
-  m_Layer: 0
+  m_Layer: 13
   m_Name: Emissive
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -88,7 +88,7 @@ GameObject:
   - component: {fileID: 2289153316278078211}
   - component: {fileID: 2036300714990854106}
   - component: {fileID: 1167781157867010006}
-  m_Layer: 0
+  m_Layer: 13
   m_Name: Emissive
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -165,7 +165,7 @@ GameObject:
   - component: {fileID: 2289153316572612493}
   - component: {fileID: 2036300715302392660}
   - component: {fileID: 1167781158127205208}
-  m_Layer: 0
+  m_Layer: 13
   m_Name: Emissive
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -242,7 +242,7 @@ GameObject:
   - component: {fileID: 2289153316603117971}
   - component: {fileID: 2036300714527397194}
   - component: {fileID: 1167781157558713670}
-  m_Layer: 0
+  m_Layer: 13
   m_Name: Emissive
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -319,7 +319,7 @@ GameObject:
   - component: {fileID: 2289153317493168033}
   - component: {fileID: 2036300716457886584}
   - component: {fileID: 1167781159354067828}
-  m_Layer: 0
+  m_Layer: 13
   m_Name: Emissive
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -396,7 +396,7 @@ GameObject:
   - component: {fileID: 2289153317618354262}
   - component: {fileID: 2036300716330605711}
   - component: {fileID: 1167781159211086979}
-  m_Layer: 0
+  m_Layer: 13
   m_Name: Emissive
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -473,7 +473,7 @@ GameObject:
   - component: {fileID: 2289153317621833227}
   - component: {fileID: 2036300716327258834}
   - component: {fileID: 1167781159214949086}
-  m_Layer: 0
+  m_Layer: 13
   m_Name: Emissive
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -550,7 +550,7 @@ GameObject:
   - component: {fileID: 2289153318186330718}
   - component: {fileID: 2036300715834080903}
   - component: {fileID: 1167781158667163275}
-  m_Layer: 0
+  m_Layer: 13
   m_Name: Emissive
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -627,7 +627,7 @@ GameObject:
   - component: {fileID: 8132721935974661730}
   - component: {fileID: 6465410482718020544}
   - component: {fileID: 1832481695465296041}
-  m_Layer: 0
+  m_Layer: 13
   m_Name: Mesh
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -704,7 +704,7 @@ GameObject:
   - component: {fileID: 8132721936518083583}
   - component: {fileID: 6465410482166210141}
   - component: {fileID: 1832481694909291828}
-  m_Layer: 0
+  m_Layer: 13
   m_Name: Mesh
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -781,7 +781,7 @@ GameObject:
   - component: {fileID: 8132721936723293426}
   - component: {fileID: 6465410481969322320}
   - component: {fileID: 1832481695106701881}
-  m_Layer: 0
+  m_Layer: 13
   m_Name: Mesh
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -858,7 +858,7 @@ GameObject:
   - component: {fileID: 8132721936950458492}
   - component: {fileID: 6465410482277717470}
   - component: {fileID: 1832481695365060279}
-  m_Layer: 0
+  m_Layer: 13
   m_Name: Mesh
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -935,7 +935,7 @@ GameObject:
   - component: {fileID: 8132721937482093999}
   - component: {fileID: 6465410483885242381}
   - component: {fileID: 1832481696980876132}
-  m_Layer: 0
+  m_Layer: 13
   m_Name: Mesh
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1012,7 +1012,7 @@ GameObject:
   - component: {fileID: 8132721937938180176}
   - component: {fileID: 6465410483437536754}
   - component: {fileID: 1832481696319162011}
-  m_Layer: 0
+  m_Layer: 13
   m_Name: Mesh
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1089,7 +1089,7 @@ GameObject:
   - component: {fileID: 8132721938063570855}
   - component: {fileID: 6465410483313400325}
   - component: {fileID: 1832481696446454124}
-  m_Layer: 0
+  m_Layer: 13
   m_Name: Mesh
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1166,7 +1166,7 @@ GameObject:
   - component: {fileID: 8132721938058650106}
   - component: {fileID: 6465410483308874840}
   - component: {fileID: 1832481696450449201}
-  m_Layer: 0
+  m_Layer: 13
   m_Name: Mesh
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1290,7 +1290,7 @@ MonoBehaviour:
   isEvolved: 0
   peutTirer: 1
   curExp: 0
-  maxExp: 10
+  maxExp: 20
   cadenceDeTir: 5
   timer: 0
 --- !u!65 &4602863000801450857
@@ -1370,7 +1370,7 @@ GameObject:
   - component: {fileID: 4620195544108003705}
   - component: {fileID: 4620195544108003704}
   - component: {fileID: 3692905824200738378}
-  m_Layer: 0
+  m_Layer: 13
   m_Name: Vert
   m_TagString: Player
   m_Icon: {fileID: 0}
@@ -1412,7 +1412,7 @@ MonoBehaviour:
   isEvolved: 0
   peutTirer: 1
   curExp: 0
-  maxExp: 10
+  maxExp: 20
   cadenceDeTir: 5
   timer: 0
 --- !u!135 &4620195544108003704
@@ -1453,7 +1453,7 @@ GameObject:
   - component: {fileID: 4620195543949289805}
   - component: {fileID: 4620195543949289804}
   - component: {fileID: 3692905824961957082}
-  m_Layer: 0
+  m_Layer: 13
   m_Name: RougeV2
   m_TagString: Player
   m_Icon: {fileID: 0}
@@ -1495,7 +1495,7 @@ MonoBehaviour:
   isEvolved: 1
   peutTirer: 1
   curExp: 0
-  maxExp: 10
+  maxExp: 20
   cadenceDeTir: 2
   timer: 0
 --- !u!64 &4620195543949289804
@@ -1538,7 +1538,7 @@ GameObject:
   - component: {fileID: 4620195544505147951}
   - component: {fileID: 4620195544505147950}
   - component: {fileID: 3692905825537151810}
-  m_Layer: 0
+  m_Layer: 13
   m_Name: Rouge
   m_TagString: Player
   m_Icon: {fileID: 0}
@@ -1581,7 +1581,7 @@ MonoBehaviour:
   isEvolved: 0
   peutTirer: 1
   curExp: 0
-  maxExp: 10
+  maxExp: 20
   cadenceDeTir: 5
   timer: 0
 --- !u!64 &4620195544505147950
@@ -1624,7 +1624,7 @@ GameObject:
   - component: {fileID: 4620195544311267368}
   - component: {fileID: 4620195544311267371}
   - component: {fileID: 3692905825540621593}
-  m_Layer: 0
+  m_Layer: 13
   m_Name: VertV2
   m_TagString: Player
   m_Icon: {fileID: 0}
@@ -1668,7 +1668,7 @@ MonoBehaviour:
   isEvolved: 1
   peutTirer: 1
   curExp: 0
-  maxExp: 10
+  maxExp: 20
   cadenceDeTir: 3
   timer: 0
 --- !u!135 &4620195544311267371
@@ -1713,7 +1713,7 @@ GameObject:
   - component: {fileID: 3692905825682791146}
   - component: {fileID: 3692905825682791149}
   - component: {fileID: 3692905825682791148}
-  m_Layer: 0
+  m_Layer: 13
   m_Name: BleuV2
   m_TagString: Player
   m_Icon: {fileID: 0}
@@ -1757,7 +1757,7 @@ MonoBehaviour:
   isEvolved: 1
   peutTirer: 1
   curExp: 0
-  maxExp: 10
+  maxExp: 20
   cadenceDeTir: 0.2
   timer: 0
 --- !u!65 &4620195543102633803
@@ -1852,7 +1852,7 @@ GameObject:
   - component: {fileID: 4620195543142719113}
   - component: {fileID: 3692905826134681358}
   - component: {fileID: 3692905826134681361}
-  m_Layer: 0
+  m_Layer: 13
   m_Name: Bleu
   m_TagString: Player
   m_Icon: {fileID: 0}
@@ -1895,7 +1895,7 @@ MonoBehaviour:
   isEvolved: 0
   peutTirer: 1
   curExp: 0
-  maxExp: 10
+  maxExp: 20
   cadenceDeTir: 0.3
   timer: 0
 --- !u!65 &4620195543142719110
@@ -2008,7 +2008,7 @@ MonoBehaviour:
   isEvolved: 1
   peutTirer: 1
   curExp: 0
-  maxExp: 10
+  maxExp: 20
   cadenceDeTir: 3
   timer: 0
 --- !u!65 &7913261214492038173
@@ -2085,7 +2085,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4620195542644530062}
-  m_Layer: 0
+  m_Layer: 13
   m_Name: pointDeTir
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2178,7 +2178,7 @@ MonoBehaviour:
   armeActuelle: {fileID: 4620195543142719111}
   moveSpeed: 10
   rotSpeed: 7
-  moveSmooth: 1
+  moveSmooth: 0.5
 --- !u!114 &4620195542848869556
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2241,7 +2241,7 @@ GameObject:
   - component: {fileID: 4620195542855565268}
   - component: {fileID: 4620195542855565271}
   - component: {fileID: 4620195542855565270}
-  m_Layer: 0
+  m_Layer: 13
   m_Name: Sphere (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2420,7 +2420,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4620195543041166070}
-  m_Layer: 0
+  m_Layer: 13
   m_Name: pointDeTir
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2451,7 +2451,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4620195543200546308}
   - component: {fileID: 4620195543200546309}
-  m_Layer: 0
+  m_Layer: 13
   m_Name: spheresD
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2520,7 +2520,7 @@ RectTransform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4620195543246757410}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: -0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 4620195544760867230}
@@ -2528,8 +2528,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: 9.340001}
-  m_SizeDelta: {x: 0, y: -3.769}
+  m_AnchoredPosition: {x: 0, y: 11}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &4620195543246757408
 CanvasRenderer:
@@ -2588,14 +2588,14 @@ MonoBehaviour:
   m_outlineColor:
     serializedVersion: 2
     rgba: 4278190080
-  m_fontSize: 2
-  m_fontSizeBase: 2
+  m_fontSize: 5
+  m_fontSizeBase: 5
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
   m_fontSizeMax: 72
   m_fontStyle: 0
-  m_textAlignment: 258
+  m_textAlignment: 1026
   m_characterSpacing: 0
   m_wordSpacing: 0
   m_lineSpacing: 0
@@ -2664,7 +2664,7 @@ GameObject:
   - component: {fileID: 4620195543354871346}
   - component: {fileID: 4620195543354871349}
   - component: {fileID: 4620195543354871348}
-  m_Layer: 0
+  m_Layer: 13
   m_Name: Sphere
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2846,7 +2846,7 @@ GameObject:
   - component: {fileID: 4620195543388329539}
   - component: {fileID: 4620195543388329538}
   - component: {fileID: 4620195543388329541}
-  m_Layer: 0
+  m_Layer: 13
   m_Name: Sphere (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3028,7 +3028,7 @@ GameObject:
   - component: {fileID: 4620195543538546689}
   - component: {fileID: 4620195543538546688}
   - component: {fileID: 4620195543538546691}
-  m_Layer: 0
+  m_Layer: 13
   m_Name: Sphere
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3281,7 +3281,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4620195543584015397}
-  m_Layer: 0
+  m_Layer: 13
   m_Name: pointDeTir
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3312,7 +3312,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4620195543592810719}
   - component: {fileID: 4620195543592810716}
-  m_Layer: 0
+  m_Layer: 13
   m_Name: TrailRenderer (2)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3520,7 +3520,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4620195543622877582}
-  m_Layer: 0
+  m_Layer: 13
   m_Name: pointDeTir
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3550,7 +3550,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4620195543627973366}
-  m_Layer: 0
+  m_Layer: 13
   m_Name: pointDeTir
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3581,7 +3581,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4620195543691024783}
   - component: {fileID: 4620195543691024780}
-  m_Layer: 0
+  m_Layer: 13
   m_Name: TrailRenderer (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3716,7 +3716,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4620195543840904687}
   - component: {fileID: 4620195543840904684}
-  m_Layer: 0
+  m_Layer: 13
   m_Name: TrailRenderer
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3851,7 +3851,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4620195543949675679}
   - component: {fileID: 4620195543949675676}
-  m_Layer: 0
+  m_Layer: 13
   m_Name: TrailRenderer
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3986,7 +3986,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4620195543966550111}
   - component: {fileID: 4620195543966550108}
-  m_Layer: 0
+  m_Layer: 13
   m_Name: TrailRenderer
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4120,7 +4120,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4620195543994677467}
-  m_Layer: 0
+  m_Layer: 13
   m_Name: pointDeTir
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4150,7 +4150,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4620195544125605874}
-  m_Layer: 0
+  m_Layer: 13
   m_Name: pointDeTir
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4180,7 +4180,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4620195544159395777}
-  m_Layer: 0
+  m_Layer: 13
   m_Name: pointDeTir
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4211,7 +4211,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4620195544395669142}
   - component: {fileID: 4620195544395669143}
-  m_Layer: 0
+  m_Layer: 13
   m_Name: spheresG
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4340,7 +4340,7 @@ GameObject:
   - component: {fileID: 4620195544678731789}
   - component: {fileID: 4620195544678731788}
   - component: {fileID: 4620195544678731791}
-  m_Layer: 0
+  m_Layer: 13
   m_Name: Sphere (2)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4522,7 +4522,7 @@ GameObject:
   - component: {fileID: 4620195544691913080}
   - component: {fileID: 4620195544691913083}
   - component: {fileID: 4620195544691913082}
-  m_Layer: 0
+  m_Layer: 13
   m_Name: Sphere (2)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4702,7 +4702,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4620195544745057097}
   - component: {fileID: 4620195544745057094}
-  m_Layer: 0
+  m_Layer: 13
   m_Name: TrailRenderer
   m_TagString: Untagged
   m_Icon: {fileID: 0}

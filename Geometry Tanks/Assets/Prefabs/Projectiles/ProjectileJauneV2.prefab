@@ -61,7 +61,7 @@ MonoBehaviour:
     m_Curve:
     - serializedVersion: 3
       time: 0
-      value: 0
+      value: 1
       inSlope: 0
       outSlope: 0
       tangentMode: 0
@@ -71,8 +71,8 @@ MonoBehaviour:
     - serializedVersion: 3
       time: 1
       value: 1
-      inSlope: 2
-      outSlope: 2
+      inSlope: 0
+      outSlope: 0
       tangentMode: 0
       weightedMode: 0
       inWeight: 0.33333334
@@ -81,8 +81,8 @@ MonoBehaviour:
     m_PostInfinity: 2
     m_RotationOrder: 4
   "dur\xE9eDeVie": 10
-  moveSpeed: 7
-  rotSpeed: 20
+  moveSpeed: 0.5
+  rotSpeed: 7
 --- !u!135 &6343790981962064977
 SphereCollider:
   m_ObjectHideFlags: 0

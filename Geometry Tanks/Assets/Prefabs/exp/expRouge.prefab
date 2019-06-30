@@ -4803,11 +4803,11 @@ MonoBehaviour:
   t: {fileID: 8010538538091849991}
   typeParticule: 1
   donne5Pts: 0
-  distanceDetection: 5
+  distanceDetection: 7.5
   "dur\xE9eAvantActivation": 0.5
   moveSpeed: 20
   slowSpeed: 0.5
-  forceOnSpawn: 0.5
+  forceOnSpawn: 5
   moveCurve:
     serializedVersion: 2
     m_Curve:
@@ -4867,7 +4867,7 @@ SphereCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 5
+  m_Radius: 7.5
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!54 &8010538538091849986
 Rigidbody:

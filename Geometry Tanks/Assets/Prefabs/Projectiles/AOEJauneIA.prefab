@@ -142,7 +142,7 @@ MonoBehaviour:
   typeAOE: 2
   collisionTags:
   - Player
-  "d\xE9g\xE2ts": 8
+  "d\xE9g\xE2ts": 3
   "dur\xE9eDeVie": 0.2
   radius: 4
 --- !u!95 &8352663856715567148

@@ -72,7 +72,7 @@ TrailRenderer:
   m_Time: 0.2
   m_Parameters:
     serializedVersion: 3
-    widthMultiplier: 6
+    widthMultiplier: 3
     widthCurve:
       serializedVersion: 2
       m_Curve:
@@ -172,7 +172,7 @@ Transform:
   m_GameObject: {fileID: 5377629861225391183}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 0.5, y: 0.5, z: 0.5}
   m_Children:
   - {fileID: 1142675238380011082}
   m_Father: {fileID: 0}
@@ -199,7 +199,7 @@ MonoBehaviour:
   collisionTags:
   - Player
   - IA
-  "d\xE9g\xE2ts": 1
+  "d\xE9g\xE2ts": 2
   moveCurve:
     serializedVersion: 2
     m_Curve:
@@ -224,8 +224,8 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  "dur\xE9eDeVie": 0.3
-  moveSpeed: 5
+  "dur\xE9eDeVie": 0.6
+  moveSpeed: 1.5
 --- !u!135 &5377629861225391179
 SphereCollider:
   m_ObjectHideFlags: 0

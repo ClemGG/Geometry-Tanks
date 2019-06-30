@@ -40,7 +40,7 @@ public class Projectile : MonoBehaviour
     protected float moveTimer, duréeTimer; //Utilisé pour évaluer moveCurve;
 
 
-    protected Vector3 rotInput, moveDir;
+    protected Vector3 moveDir;
 
 
 
@@ -96,7 +96,7 @@ public class Projectile : MonoBehaviour
 
 
 
-    protected void Update()
+    protected virtual void Update()
     {
         if(duréeTimer < duréeDeVie)
         {
@@ -115,7 +115,6 @@ public class Projectile : MonoBehaviour
     protected virtual void FixedUpdate()
     {
         Move();
-        Rotate();
     }
 
 
@@ -125,12 +124,6 @@ public class Projectile : MonoBehaviour
         moveTimer += Time.deltaTime;
         rb.MovePosition(t.position + t.forward * moveCurve.Evaluate(moveTimer) * moveSpeed /* * Time.deltaTime*/);
     }
-
-    protected virtual void Rotate()
-    {
-        
-    }
-
 
     protected virtual void OnTriggerEnter(Collider c)
     {

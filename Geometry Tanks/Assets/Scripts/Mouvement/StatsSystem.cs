@@ -87,18 +87,23 @@ public class StatsSystem : MonoBehaviour
         //Si le projectile et le vaisseau sont de la même couleur ou si le joueur est touché par son propre projectile, alors on n'applique aucun dégât, et le projectile passe à travers le joueur
         if (typeDeProjectile == p.typeDuVaisseau || enemyID == p.joueurID)
             return;
-
-        if (typeDeProjectile == Enums.TypeArme.Vert)
-
+        
             curHealth -= pts;
 
         playerUI.UpdateHealthUI();
+        ScoreManager.instance.UpdateHealthUI(p.joueurID);
 
         if (curHealth < 0)
         {
             curHealth = 0;
             Die(enemyID);
+            AudioManager.instance.Play("death");
+
+            return;
         }
+
+        AudioManager.instance.Play("hit");
+
     }
 
     //Mettre 0 par défaut pour les IAs (vu qu'elles n'ont pas d'ID)
@@ -111,7 +116,7 @@ public class StatsSystem : MonoBehaviour
 
         curHealth -= pts;
         playerUI.UpdateHealthUI();
-
+        ScoreManager.instance.UpdateHealthUI(p.joueurID);
 
 
         if (curHealth < 0)
@@ -125,9 +130,13 @@ public class StatsSystem : MonoBehaviour
 
             curHealth = 0;
             Die(enemyID);
-            
+            AudioManager.instance.Play("death");
+
             return;
         }
+
+        AudioManager.instance.Play("hit");
+
 
         if (typeDeProjectile == Enums.TypeArme.Vert)
         {
@@ -171,14 +180,19 @@ public class StatsSystem : MonoBehaviour
         deaths++;
 
         //Camera.main.GetComponent<CameraShake>().Shake();
-        
-        if(enemyID > 0) //Si l'ID est égal à 0, l'ennemi qui a tué le joueur est une IA, donc on ne change que le UI du joueur mort
+
+        //Si l'ID est égal à 0, l'ennemi qui a tué le joueur est une IA, donc on ne change que le UI du joueur mort
+        if (enemyID > 0)
+        {
+            GameManager.instance.joueurs[enemyID - 1].kills++;
             ScoreManager.instance.UpdateKdrUI(enemyID);
+        } 
 
         LooseAllExp(); //Videra tout l'exp d joueur et libérera des particules d'exp dans l'arène
 
         SpawnPrefabsOnDeath();
-        StartCoroutine(GameManager.instance.RespawnPlayerOnDeath(p.joueurID));
+
+        GameManager.instance.RespawnPlayerOnDeath(p.joueurID);
     }
 
 
@@ -187,7 +201,7 @@ public class StatsSystem : MonoBehaviour
 
 
 
-    private void SpawnPrefabsOnDeath()
+    public void SpawnPrefabsOnDeath()
     {
         ObjectPooler.instance.SpawnFromPool(particlesToSpawnOnDeath[(int)p.typeDuVaisseau], t.position, Quaternion.identity);
     }
@@ -197,24 +211,18 @@ public class StatsSystem : MonoBehaviour
 
     private void LooseAllExp()
     {
-        for (int i = 0; i < 3; i++)
+        for (int i = 0; i < 4; i++)
         {
             int experience = p.tousLesMeshsDuJoueur[i].GetComponent<Arme>().curExp;
 
-            int nbDeGrossesParticules = 0;
+            int nbDeGrossesParticules = Mathf.FloorToInt((float)experience / 5f); //Si on a plus de 5 points d'expérience dans une arme, on spawn les grosses particules, sinon les petites
 
-            if((float)experience / 5f > 1f)
-            {
-                nbDeGrossesParticules = Mathf.FloorToInt((float)experience / 5f); //Si on a plus de 5 points d'expérience dans une arme, on spawn les grosses particules, sinon les petites
-            }
-            
-
-            for (int j = 0; j < nbDeGrossesParticules; j++)
+            for (int j = 0; j < Mathf.FloorToInt((float)nbDeGrossesParticules / 2f); j++)
             {
                 ObjectPooler.instance.SpawnFromPool(particleTags[i + 4], t.position, Quaternion.identity);  //Penser à implémenter l'interface IPooledObject pour ajouter des forces aux particules
                 experience -= 5;
             }
-            for (int j = 0; j < experience; j++)
+            for (int j = 0; j < Mathf.FloorToInt((float)experience / 2f); j++)
             {
                 ObjectPooler.instance.SpawnFromPool(particleTags[i], t.position, Quaternion.identity);
             }
@@ -265,15 +273,7 @@ public class StatsSystem : MonoBehaviour
     private void OnEnable()
     {
         p = GetComponent<PlayerMovement>();
-
-        if (ScoreManager.instance)
-        {
-            if(p.joueurID != 0)
-            {
-                ScoreManager.instance.InitializePlayerUI(p.joueurID);
-                //On remet à jour tous les UIs au moment de la mort et du respawn du joueur
-            }
-        }
+        
 
         if(MultipleTargetCam.instance)
             MultipleTargetCam.instance.targets.Add(transform);

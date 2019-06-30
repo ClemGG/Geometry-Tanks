@@ -51,9 +51,13 @@ public class ProjectileVert : Projectile
 
     protected override void SpawnPrefabsOnDeath()
     {
+        AudioManager.instance.Play("GreenExplosion");
+
+
         for (int i = 0; i < prefabsToSpawnOnDeath.Length; i++)
         {
-            AOE aoe = ObjectPooler.instance.SpawnFromPool(prefabsToSpawnOnDeath[i], t.position, t.rotation).GetComponent<AOE>();
+            GameObject go = ObjectPooler.instance.SpawnFromPool(prefabsToSpawnOnDeath[i], t.position, t.rotation);
+            AOE aoe = go.GetComponent<AOE>();
 
             if (aoe)
             {

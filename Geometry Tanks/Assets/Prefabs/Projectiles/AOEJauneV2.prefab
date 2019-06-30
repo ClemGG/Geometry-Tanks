@@ -143,7 +143,7 @@ MonoBehaviour:
   collisionTags:
   - Player
   - IA
-  "d\xE9g\xE2ts": 10
+  "d\xE9g\xE2ts": 5
   "dur\xE9eDeVie": 0.2
   radius: 4
 --- !u!95 &8029943855860175082

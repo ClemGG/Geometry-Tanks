@@ -18,6 +18,9 @@ public class SpawnerProjectilsVertsV2 : MonoBehaviour
 
     private void SpawnBullets()
     {
+        AudioManager.instance.Play("GreenExplosion");
+
+
         for (int i = 0; i < t.childCount; i++)
         {
             ObjectPooler.instance.SpawnFromPool(projectileVertTag, t.GetChild(i).position, t.GetChild(i).rotation);

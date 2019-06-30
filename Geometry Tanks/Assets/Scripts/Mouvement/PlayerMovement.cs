@@ -154,8 +154,13 @@ public class PlayerMovement : MonoBehaviour
 
 
 
-    private void ChangerArmeEtVaisseau(Enums.TypeArme nouveauTypeArme)
+    public void ChangerArmeEtVaisseau(Enums.TypeArme nouveauTypeArme)
     {
+        if(ObjectPooler.instance)
+            s.SpawnPrefabsOnDeath();
+
+        if(AudioManager.instance)
+            AudioManager.instance.Play("changementVaisseau");
 
         typeDuVaisseau = nouveauTypeArme;
 
@@ -254,6 +259,7 @@ public class PlayerMovement : MonoBehaviour
             //On oriente le joueur en fonction de la normale de la surface sur laquelle il marche
             Quaternion targetRotation = Quaternion.FromToRotation(tousLesMeshsDuJoueur[i].forward, moveDir) * tousLesMeshsDuJoueur[i].rotation;
             tousLesMeshsDuJoueur[i].rotation = Quaternion.Slerp(tousLesMeshsDuJoueur[i].rotation, targetRotation, rotSpeed * Time.deltaTime);
+            tousLesMeshsDuJoueur[i].eulerAngles = new Vector3(0f, tousLesMeshsDuJoueur[i].eulerAngles.y, 0f);
         }
     }
 

@@ -6,7 +6,7 @@ using UnityEngine;
 
 public class ProjectileJaune : Projectile
 {
-    Transform joueurASuivre, meshToRotate;
+    Transform joueurASuivre;
 
     public float rotSpeed = 20f;
 
@@ -15,30 +15,34 @@ public class ProjectileJaune : Projectile
     protected override void Start()
     {
         base.Start();
-        meshToRotate = t.GetChild(0); //Pour faire tourner le missile. Les meshs / effets de particule des projectiles devront tous être enfants à la Transform portant le script Projectile
 
     }
 
 
     protected override void FixedUpdate()
     {
-        joueurASuivre = ChercherJoueurLePlusProche();
+
         base.FixedUpdate();
+
+        if (isEvolved)
+        {
+            joueurASuivre = ChercherJoueurLePlusProche();
+            Rotate();
+        }
     }
 
-
-    protected override void Rotate()
+    private void Rotate()
     {
         if (!joueurASuivre)
         {
             return;
         }
 
-        Vector3 dir = (joueurASuivre.position - t.position).normalized;
+        moveDir = (joueurASuivre.position - t.position).normalized;
 
         //On oriente le mesh du missile en fonction de sa direction par rapport au joueur
-        Quaternion targetRotation = Quaternion.FromToRotation(meshToRotate.forward, moveDir) * meshToRotate.rotation;
-        meshToRotate.rotation = Quaternion.Slerp(meshToRotate.rotation, targetRotation, rotSpeed * Time.deltaTime);
+        Quaternion targetRotation = Quaternion.FromToRotation(t.forward, moveDir) * t.rotation;
+        t.rotation = Quaternion.Slerp(t.rotation, targetRotation, rotSpeed * Time.deltaTime);
     }
 
 
@@ -51,6 +55,7 @@ public class ProjectileJaune : Projectile
 
         float minDst = Mathf.Infinity;
         Transform joueurLePlusProche = null;
+
 
         for (int i = 0; i < entités.Length; i++)
         {
@@ -94,6 +99,9 @@ public class ProjectileJaune : Projectile
 
     protected override void OnTriggerEnter(Collider c)
     {
+
+
+
         if (c.CompareTag("Wall"))
         {
 
@@ -148,6 +156,9 @@ public class ProjectileJaune : Projectile
 
     protected override void SpawnPrefabsOnDeath()
     {
+        AudioManager.instance.Play("YellowExplosion");
+
+
         for (int i = 0; i < prefabsToSpawnOnDeath.Length; i++)
         {
             AOE aoe = ObjectPooler.instance.SpawnFromPool(prefabsToSpawnOnDeath[i], t.position, t.rotation).GetComponent<AOE>();

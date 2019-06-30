@@ -35,20 +35,64 @@ public class ProjectileRouge : Projectile
 
         if(Mathf.Approximately(radiusCurve.Evaluate(timer), 1f))
         {
+            SpawnPrefabsOnDeath();
+            ennemis.Clear();
             gameObject.SetActive(false);
         }
     }
 
     protected override void OnTriggerEnter(Collider c)
     {
-        PlayerMovement p = c.transform.parent.GetComponent<PlayerMovement>();
 
-        if (p)
-        { 
-            if(p.joueurID != projectileID && p.typeDuVaisseau != typeDeProjectile)
-                ennemis.Add(c.transform.parent); //Puisqu'on met le trigger sur chacun des meshs, on va chercher le "Player" donc le parent
+
+        
+        for (int i = 0; i < collisionTags.Length; i++)
+        {
+            if (c.CompareTag(collisionTags[i]))
+            {
+                if (c.CompareTag("Player"))
+                {
+                    StatsSystem s = c.transform.transform.parent.GetComponent<StatsSystem>();
+
+                    if (s)
+                    {
+                        if (s.p.joueurID != projectileID)
+                        {
+                            if (s.p.typeDuVaisseau != typeDeProjectile)
+                            {
+                                ennemis.Add(c.transform.parent); //Puisqu'on met le trigger sur chacun des meshs, on va chercher le "Player" donc le parent
+                            }
+                            s.OnHit(dégâts, projectileID, typeDeProjectile); //Puisqu'on met le trigger sur chacun des meshs, on va chercher le "Player" donc le parent
+
+                        }
+                    }
+                }
+                else if (c.CompareTag("IA"))
+                {
+                    IAStats s = c.GetComponent<IAStats>();
+
+                    if (s)
+                    {
+                        if (projectileID != 0)
+                        {
+                            if (s.m.typeDeCetteIA != typeDeProjectile)
+                            {
+                                ennemis.Add(c.transform); //Puisqu'on met le trigger sur chacun des meshs, on va chercher le "Player" donc le parent
+                            }
+
+                            s.OnHit(dégâts, typeDeProjectile); //Puisqu'on met le trigger sur chacun des meshs, on va chercher le "Player" donc le parent
+                            
+                        }
+                    }
+                }
+
+
+
+            }
         }
-        base.OnTriggerEnter(c);
+
+
+
     }
 
 
@@ -58,12 +102,18 @@ public class ProjectileRouge : Projectile
 
         if (isEvolved)  //Si l'onde de choc rouge vient d'une arme évoluée, on fait spawner des ondes de choc plus faibles à l'endroit où les ennemis se trouvent
         {
+
             for (int i = 0; i < ennemis.Count; i++)
             {
-                ProjectileRouge pr = ObjectPooler.instance.SpawnFromPool("projectileRougeRépliquat", ennemis[i].position, Quaternion.identity).GetComponent<ProjectileRouge>();
-                pr.projectileID = projectileID; 
+
+                ProjectileRouge pr = ObjectPooler.instance.SpawnFromPool("projectileRougeRepliquat", ennemis[i].position, Quaternion.identity).GetComponent<ProjectileRouge>();
+                pr.projectileID = projectileID;
+                pr.t.position = ennemis[i].position;
+
+                print(ennemis[i].position);
+                print(pr.t.position);
+
             }
         }
-        ennemis = new List<Transform>();
     }
 }
